@@ -6,9 +6,9 @@
 
 static const coords_t se_offsets[] = {
 	{-3, 0},
-    {-3, 1}, 
+    {-3, 1},
 	{-3, 2},
-	{-3, 3}, 
+	{-3, 3},
 	{-2, 3},
 	{-1, 3},
 	{0, 3},
@@ -21,10 +21,10 @@ static const coords_t se_offsets[] = {
 	{3, -1},
 	{3, -2},
 	{3, -3},
-	{2, -3}, 
-	{1, -3}, 
-	{0, -3}, 
-	{-1, -3}, 
+	{2, -3},
+	{1, -3},
+	{0, -3},
+	{-1, -3},
 	{-2, -3},
 	{-3, -3},
 	{-3, -2},
@@ -104,18 +104,55 @@ int find_neighbour(agent_info_t info, cell_t type)
 			return dir;
 		}
 	}
-
 	return -1;
+}
+
+int	return_to_hive(agent_info_t info, coords_t hive_loc)
+{
+	if (info.col > hive_loc.col)
+	{
+		if (info.row > hive_loc.row)
+			return (7);
+		else if (info.row < hive_loc.row)
+			return (5);
+		else
+			return (6);
+	}
+	else if (info.col < hive_loc.col)
+	{
+		if (info.row > hive_loc.row)
+			return (1);
+		else if (info.row < hive_loc.row)
+			return (3);
+		else
+			return (2);
+	}
+	else
+	{
+		if (info.row > hive_loc.row)
+			return (0);
+		else
+			return (4);
+	}
 }
 
 command_t think(agent_info_t info)
 {
 	static char	arr[NUM_ROWS][NUM_COLS];
-    int middle_row = NUM_ROWS / 2;
 	int	flower_dir;
+	coords_t hive_loc;
 
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
-    if (info.player == 1)
+	if (info.player == 0)
+	{
+		hive_loc.row = (NUM_ROWS / 2);
+		hive_loc.col = 1;
+	}
+	else
+	{
+		hive_loc.row = (NUM_ROWS / 2);
+		hive_loc.col = (NUM_COLS - 2);
+	}
 	if (is_bee_with_flower(bee))
 	{
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
@@ -126,9 +163,10 @@ command_t think(agent_info_t info)
 				.direction = hive_dir
 			};
 		}
+		hive_dir = return_to_hive(info, hive_loc);
 		return (command_t) {
 			.action = MOVE,
-			.direction = rand() % 8
+			.direction = hive_dir
 		};
 	}
 	else
