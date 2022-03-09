@@ -2,6 +2,9 @@
 src/arena
 src/libagent.a
 example-agent/agent
+example-agent-emende/agent
+example-agent-lua/agent
+example-agent-python/agent
 bin
 *.log
 *.log.gz
