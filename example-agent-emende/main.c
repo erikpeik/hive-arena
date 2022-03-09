@@ -111,10 +111,11 @@ int find_neighbour(agent_info_t info, cell_t type)
 command_t think(agent_info_t info)
 {
 	static char	arr[NUM_ROWS][NUM_COLS];
+    int middle_row = NUM_ROWS / 2;
 	int	flower_dir;
 
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
-
+    if (info.player == 1)
 	if (is_bee_with_flower(bee))
 	{
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
