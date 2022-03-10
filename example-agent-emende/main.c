@@ -2,7 +2,15 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include "agent.h"
+#include <string.h>
+
+void	ft_putstr_fd(char const *s, int fd)
+{ 
+	write(fd, s, strlen(s));
+	write(fd, "\n", 2);
+}
 
 static const coords_t se_offsets[] = {
 	{-3, 0},
@@ -135,14 +143,36 @@ int	return_to_hive(agent_info_t info, coords_t hive_loc)
 			return (4);
 	}
 }
+void	update_map(char arr[NUM_ROWS][NUM_COLS], agent_info_t info)
+{
+	arr[info.row][0] = 'U';
+}
+
+void initialize_map(char arr[NUM_ROWS][NUM_COLS +1 ])
+{
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < (NUM_COLS + 1); col++)
+		{
+			arr[row][col] = '.';
+		} 
+	}	
+}
 
 command_t think(agent_info_t info)
 {
-	static char	arr[NUM_ROWS][NUM_COLS];
+	static char	arr[NUM_ROWS][NUM_COLS + 1];
+	if (arr[0][0] == '\0')
+		initialize_map(arr);
+	int fd = open("printf", O_RDWR);
+	if (fd < 0)
+		panic("open failed");
 	int	flower_dir;
 	coords_t hive_loc;
 
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
+	update_map(arr, info);
+	ft_putstr_fd((const char *)arr[info.row], fd); 
 	if (info.player == 0)
 	{
 		hive_loc.row = (NUM_ROWS / 2);
@@ -157,7 +187,7 @@ command_t think(agent_info_t info)
 	{
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
 		if (hive_dir >= 0)
-		{
+		{	
 			return (command_t) {
 				.action = FORAGE,
 				.direction = hive_dir
