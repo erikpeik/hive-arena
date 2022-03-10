@@ -2,7 +2,42 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include "agent.h"
+#include <string.h>
+
+void	ft_putstr_fd(char const *s, int fd)
+{ 
+	write(fd, s, strlen(s));
+	write(fd, "\n", 2);
+}
+
+static const coords_t se_offsets[] = {
+	{-3, 0},
+    {-3, 1},
+	{-3, 2},
+	{-3, 3},
+	{-2, 3},
+	{-1, 3},
+	{0, 3},
+	{1, 3},
+	{2, 3},
+	{3, 3},
+	{3, 2},
+	{3, 1},
+	{3, 0},
+	{3, -1},
+	{3, -2},
+	{3, -3},
+	{2, -3},
+	{1, -3},
+	{0, -3},
+	{-1, -3},
+	{-2, -3},
+	{-3, -3},
+	{-3, -2},
+	{-3, -1},
+};
 
 static const coords_t e_offsets[] = {
 	{-2, 0}, // 0
@@ -22,6 +57,16 @@ static const coords_t e_offsets[] = {
 	{-2, -2},
 	{-2, -1}
 };
+
+coords_t direction_to_coords_3(coords_t from, int direction)
+{
+	coords_t offset = se_offsets[direction];
+
+	return (coords_t) {
+		.row = from.row + offset.row,
+		.col = from.col + offset.col
+	};
+}
 
 coords_t direction_to_coords_2(coords_t from, int direction)
 {
@@ -44,6 +89,13 @@ int	find_distant(agent_info_t info, cell_t type)
 		if (distant == type)
 			return (dir/2);
 	}
+    	for (int dir = 0 ; dir < 24 ; dir++)
+	{
+		coords_t coords = direction_to_coords_3(center, dir);
+		cell_t distant = info.cells[coords.row][coords.col];
+		if (distant == type)
+			return (dir/3);
+	}
 	return (-1);
 }
 
@@ -60,30 +112,91 @@ int find_neighbour(agent_info_t info, cell_t type)
 			return dir;
 		}
 	}
-
 	return -1;
+}
+
+int	return_to_hive(agent_info_t info, coords_t hive_loc)
+{
+	if (info.col > hive_loc.col)
+	{
+		if (info.row > hive_loc.row)
+			return (NW);
+		else if (info.row < hive_loc.row)
+			return (SW);
+		else
+			return (W);
+	}
+	else if (info.col < hive_loc.col)
+	{
+		if (info.row > hive_loc.row)
+			return (NE);
+		else if (info.row < hive_loc.row)
+			return (SE);
+		else
+			return (E);
+	}
+	else
+	{
+		if (info.row > hive_loc.row)
+			return (N);
+		else
+			return (S);
+	}
+}
+void	update_map(char arr[NUM_ROWS][NUM_COLS], agent_info_t info)
+{
+	arr[info.row][0] = 'U';
+}
+
+void initialize_map(char arr[NUM_ROWS][NUM_COLS +1 ])
+{
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < (NUM_COLS + 1); col++)
+		{
+			arr[row][col] = '.';
+		} 
+	}	
 }
 
 command_t think(agent_info_t info)
 {
-	static char	arr[NUM_ROWS][NUM_COLS];
+	static char	arr[NUM_ROWS][NUM_COLS + 1];
+	if (arr[0][0] == '\0')
+		initialize_map(arr);
+	int fd = open("printf", O_RDWR);
+	if (fd < 0)
+		panic("open failed");
 	int	flower_dir;
+	coords_t hive_loc;
 
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
-
+	update_map(arr, info);
+	ft_putstr_fd((const char *)arr[info.row], fd); 
+	if (info.player == 0)
+	{
+		hive_loc.row = (NUM_ROWS / 2);
+		hive_loc.col = 1;
+	}
+	else
+	{
+		hive_loc.row = (NUM_ROWS / 2);
+		hive_loc.col = (NUM_COLS - 2);
+	}
 	if (is_bee_with_flower(bee))
 	{
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
 		if (hive_dir >= 0)
-		{
+		{	
 			return (command_t) {
 				.action = FORAGE,
 				.direction = hive_dir
 			};
 		}
+		hive_dir = return_to_hive(info, hive_loc);
 		return (command_t) {
 			.action = MOVE,
-			.direction = rand() % 8
+			.direction = hive_dir
 		};
 	}
 	else
