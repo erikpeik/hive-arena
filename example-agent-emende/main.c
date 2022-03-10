@@ -182,8 +182,8 @@ void	update_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info)
 			col = -VIEW_DISTANCE;
 		while (col <= VIEW_DISTANCE && info.col + col < NUM_COLS)
 		{
-			// arr[info.row + row][info.col + col] = info.cells[info.row + row][info.col + col];
-			arr[info.row + row][info.col + col] = 0;
+			arr[info.row + row][info.col + col] = info.cells[VIEW_DISTANCE + row][VIEW_DISTANCE + col];
+			//arr[info.row + row][info.col + col] = 0;
 			col++;
 		}
 		row++;
@@ -196,9 +196,7 @@ void initialize_map(int arr[NUM_ROWS][NUM_COLS])
 	{
 //		memset((void *) arr[row], -1, sizeof(int) * NUM_COLS);
 		for (int col = 0; col < (NUM_COLS); col++)
-		{
-			arr[row][col] = 9;
-		}
+			arr[row][col] = -1;
 	}
 }
 
@@ -209,7 +207,21 @@ void	print_map(int arr[NUM_ROWS][NUM_COLS], int fd, agent_info_t info)
 	{
 		for (int col = 0; col < NUM_COLS; col++)
 		{
-			ft_putnbr_fd(arr[row][col], fd);
+			if (arr[row][col] == -1)
+				ft_putstr_fd("~", fd);
+			else if (arr[row][col] == 0)
+				ft_putstr_fd(".", fd);
+			else if (arr[row][col] == 1 || arr[row][col] == 2)
+				ft_putstr_fd("B" , fd);
+			else if (arr[row][col] == 3 || arr[row][col] == 4)
+				ft_putstr_fd("f", fd);
+			else if (arr[row][col] == 5)
+				ft_putstr_fd("F", fd);
+			else if (arr[row][col] == 7 || arr[row][col] == 8)
+				ft_putstr_fd("H", fd);
+			else
+				ft_putnbr_fd(arr[row][col], fd);
+			ft_putchar_fd(' ', fd);
 		}
 		ft_putchar_fd('\n', fd);
 	}
@@ -226,7 +238,9 @@ command_t think(agent_info_t info)
 
 	if (info.turn == 0 || info.turn == 1)
 	{
-		fd = open("printf", O_RDWR);
+		fd = open("map_log", O_RDWR);
+		if (fd < 0)
+			panic("Open failed");
 		initialize_map(arr);
 	}
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
