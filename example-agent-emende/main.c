@@ -121,27 +121,27 @@ int	return_to_hive(agent_info_t info, coords_t hive_loc)
 	if (info.col > hive_loc.col)
 	{
 		if (info.row > hive_loc.row)
-			return (7);
+			return (NW);
 		else if (info.row < hive_loc.row)
-			return (5);
+			return (SW);
 		else
-			return (6);
+			return (W);
 	}
 	else if (info.col < hive_loc.col)
 	{
 		if (info.row > hive_loc.row)
-			return (1);
+			return (NE);
 		else if (info.row < hive_loc.row)
-			return (3);
+			return (SE);
 		else
-			return (2);
+			return (E);
 	}
 	else
 	{
 		if (info.row > hive_loc.row)
-			return (0);
+			return (N);
 		else
-			return (4);
+			return (S);
 	}
 }
 void	update_map(char arr[NUM_ROWS][NUM_COLS], agent_info_t info)
