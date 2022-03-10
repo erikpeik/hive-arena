@@ -7,9 +7,10 @@
 #include <string.h>
 
 void	ft_putstr_fd(char const *s, int fd)
-{ 
+{
+	char n = '\n';
 	write(fd, s, strlen(s));
-	write(fd, "\n", 2);
+	write(fd, &n, 1);
 }
 
 static const coords_t se_offsets[] = {
@@ -152,11 +153,11 @@ void initialize_map(char arr[NUM_ROWS][NUM_COLS +1 ])
 {
 	for (int row = 0; row < NUM_ROWS; row++)
 	{
-		for (int col = 0; col < (NUM_COLS + 1); col++)
+		for (int col = 0; col < (NUM_COLS); col++)
 		{
 			arr[row][col] = '.';
-		} 
-	}	
+		}
+	}
 }
 
 command_t think(agent_info_t info)
@@ -172,7 +173,7 @@ command_t think(agent_info_t info)
 
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
 	update_map(arr, info);
-	ft_putstr_fd((const char *)arr[info.row], fd); 
+	ft_putstr_fd((const char *)arr[info.row], fd);
 	if (info.player == 0)
 	{
 		hive_loc.row = (NUM_ROWS / 2);
@@ -187,7 +188,7 @@ command_t think(agent_info_t info)
 	{
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
 		if (hive_dir >= 0)
-		{	
+		{
 			return (command_t) {
 				.action = FORAGE,
 				.direction = hive_dir
@@ -222,10 +223,6 @@ command_t think(agent_info_t info)
 			.direction = rand() % 8
 		};
 	}
-/*	return (command_t) {
-		.action = MOVE,
-		.direction = rand() % 8
-	}; */
 }
 
 int main(int argc, char **argv)
