@@ -6,11 +6,32 @@
 #include "agent.h"
 #include <string.h>
 
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
 void	ft_putstr_fd(char const *s, int fd)
 {
-	char n = '\n';
 	write(fd, s, strlen(s));
-	write(fd, &n, 1);
+}
+
+void	ft_putnbr_fd(int n, int fd)
+{
+	if (n == -2147483648)
+		ft_putstr_fd("-2147483648", fd);
+	else if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		ft_putnbr_fd(-n, fd);
+	}
+	else if (n > 9)
+	{
+		ft_putnbr_fd(n / 10, fd);
+		ft_putnbr_fd(n % 10, fd);
+	}
+	else
+		ft_putchar_fd((char ) n + '0', fd);
 }
 
 static const coords_t se_offsets[] = {
@@ -144,36 +165,74 @@ int	return_to_hive(agent_info_t info, coords_t hive_loc)
 			return (S);
 	}
 }
-void	update_map(char arr[NUM_ROWS][NUM_COLS], agent_info_t info)
+void	update_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info)
 {
-	arr[info.row][0] = 'U';
+	int col;
+	int	row;
+
+	if (info.row < VIEW_DISTANCE)
+		row = -info.row;
+	else
+		row = -VIEW_DISTANCE;
+	while (row <= VIEW_DISTANCE && info.row + row < NUM_ROWS)
+	{
+		if (info.col < VIEW_DISTANCE)
+			col = -info.col;
+		else
+			col = -VIEW_DISTANCE;
+		while (col <= VIEW_DISTANCE && info.col + col < NUM_COLS)
+		{
+			// arr[info.row + row][info.col + col] = info.cells[info.row + row][info.col + col];
+			arr[info.row + row][info.col + col] = 0;
+			col++;
+		}
+		row++;
+	}
 }
 
-void initialize_map(char arr[NUM_ROWS][NUM_COLS +1 ])
+void initialize_map(int arr[NUM_ROWS][NUM_COLS])
 {
 	for (int row = 0; row < NUM_ROWS; row++)
 	{
+//		memset((void *) arr[row], -1, sizeof(int) * NUM_COLS);
 		for (int col = 0; col < (NUM_COLS); col++)
 		{
-			arr[row][col] = '.';
+			arr[row][col] = 9;
 		}
 	}
 }
 
+void	print_map(int arr[NUM_ROWS][NUM_COLS], int fd, agent_info_t info)
+{
+	dprintf(fd, "Turn:	%d\n", info.turn);
+	for (int row = 0; row < NUM_ROWS; row++)
+	{
+		for (int col = 0; col < NUM_COLS; col++)
+		{
+			ft_putnbr_fd(arr[row][col], fd);
+		}
+		ft_putchar_fd('\n', fd);
+	}
+	ft_putchar_fd('\n', fd);
+}
+
+int fd;
+
 command_t think(agent_info_t info)
 {
-	static char	arr[NUM_ROWS][NUM_COLS + 1];
-	if (arr[0][0] == '\0')
-		initialize_map(arr);
-	int fd = open("printf", O_RDWR);
-	if (fd < 0)
-		panic("open failed");
+	static int	arr[NUM_ROWS][NUM_COLS];
 	int	flower_dir;
 	coords_t hive_loc;
 
+	if (info.turn == 0 || info.turn == 1)
+	{
+		fd = open("printf", O_RDWR);
+		initialize_map(arr);
+	}
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
 	update_map(arr, info);
-	ft_putstr_fd((const char *)arr[info.row], fd);
+//	ft_putstr_fd((const char *)arr[info.row], fd);
+	print_map(arr, fd, info);
 	if (info.player == 0)
 	{
 		hive_loc.row = (NUM_ROWS / 2);
