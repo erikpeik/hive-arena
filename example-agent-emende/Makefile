@@ -9,6 +9,8 @@ NAME=agent
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	rm -f map_log
+	touch map_log
 	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 clean:
