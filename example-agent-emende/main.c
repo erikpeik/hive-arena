@@ -2,6 +2,111 @@
 
 int fd;
 
+coords_t	circle_around(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, int offset)
+{
+	if (info.row - offset > 0)
+	{
+		for (int i = -offset; i < offset; i++)
+		{
+			if (info.col + i > 0 && info.col + i < NUM_COLS && arr[info.row - offset][info.col + i] == type)
+			{
+				return (coords_t){
+					.row = info.row - offset,
+					.col = info.col + i
+				};
+			}
+		}
+	}
+	if (info.col + offset < NUM_COLS)
+	{
+		for (int i = -offset; i < offset; i++)
+		{
+			if (info.row + i > 0 && info.row + i < NUM_ROWS && arr[info.row + i][info.col + offset] == type)
+			{
+				return (coords_t){
+					.row = info.row + i,
+					.col = info.col + offset
+				};
+			}
+		}
+	}
+	if (info.row + offset < NUM_ROWS)
+	{
+		for (int i = offset; i > -offset; i--)
+		{
+			if (info.col + i > 0 && info.col + i < NUM_COLS && arr[info.row + offset][info.col + i] == type)
+			{
+				return (coords_t){
+					.row = info.row + offset,
+					.col = info.col + i
+				};
+			}
+		}
+	}
+	if (info.col - offset > 0)
+	{
+		for (int i = offset; i > -offset; i--)
+		{
+			if (info.row + i > 0 && info.row + i < NUM_ROWS && arr[info.row + i][info.col - offset] == type)
+			{
+				return (coords_t){
+					.row = info.row + i,
+					.col = info.col - offset
+				};
+			}
+		}
+	}
+	return (coords_t) {
+		.row = -1,
+		.col = -1
+	};
+}
+
+int	open_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type)
+{
+	int			min = VIEW_DISTANCE + 1;
+	int			max = 0;
+	int 		temp = 0;
+	coords_t	target;
+	int			dir;
+
+	if (info.col < (NUM_COLS / 2))
+	{
+		temp = NUM_COLS - info.col;
+		if (temp > max)
+			max = temp;
+	}
+	else
+	{
+		temp = NUM_COLS;
+		if (temp > max)
+			max = temp;
+	}
+	if (info.row < (NUM_ROWS / 2))
+	{
+		temp = NUM_ROWS - info.row;
+		if (temp > max)
+			max = temp;
+	}
+	else
+	{
+		temp = NUM_ROWS;
+		if (temp > max)
+			max = temp;
+	}
+	while (min <= max)
+	{
+		target = circle_around(arr, info, type, min);
+		if(target.row != -1 && target.col != -1)
+		{
+			dir = return_to_hive(info, target);
+			return (dir);
+		}
+		min++;
+	}
+	return (-1);
+}
+
 void locate_hive(int player, coords_t *hive_loc)
 {
 	if (player == 0)
@@ -115,6 +220,16 @@ command_t think(agent_info_t info)
 			};
 		}
 		flower_dir = find_distant(info, FLOWER);
+		if (flower_dir >= 0)
+			flower_dir = is_cell_free(info, flower_dir);
+		if (flower_dir >= 0)
+		{
+			return (command_t) {
+				.action = MOVE,
+				.direction = flower_dir
+			};
+		}
+		flower_dir = open_map(arr, info, FLOWER);
 		if (flower_dir >= 0)
 			flower_dir = is_cell_free(info, flower_dir);
 		if (flower_dir >= 0)
