@@ -51,6 +51,7 @@ command_t think(agent_info_t info)
 	}
 	else
 	{
+		/* Pick flower if it's neightbour */
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
 		{
@@ -59,6 +60,7 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
+		/* Looks flower in view distance */
 		flower_dir = find_distant(info, FLOWER);
 		if (flower_dir >= 0)
 			flower_dir = is_cell_free(info, flower_dir);
@@ -69,6 +71,7 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
+		/* Looking flowers in map */
 		flower_dir = open_map(arr, info, FLOWER);
 		if (flower_dir >= 0)
 			flower_dir = is_cell_free(info, flower_dir);
@@ -79,6 +82,7 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
+		/* Looking not visited places in map */
 		cloud_dir = open_map(arr, info, -1);
 		if (cloud_dir >= 0)
 			cloud_dir = is_cell_free(info, cloud_dir);
@@ -89,6 +93,7 @@ command_t think(agent_info_t info)
 				.direction = cloud_dir
 			};
 		}
+		/* Move random direction */
 		return (command_t) {
 			.action = MOVE,
 			.direction = rand() % 8
