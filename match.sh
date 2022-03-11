@@ -7,9 +7,15 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
+<<<<<<< HEAD
 make -C src
 make -C $1
 make -C $2
+=======
+make re -C src
+make re -C $1
+make re -C $2
+>>>>>>> 40f1a881e23c48a84529727488d2cb5d2ca94611
 
 team1=$(basename $1)
 team2=$(basename $2)
