@@ -11,12 +11,15 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	rm -f map_log
 	touch map_log
-	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS)
+	@make -C libft/
+	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) -Llibft/ -lft -I includes
 
 clean:
+	@make clean -C libft/
 	rm -f $(OBJS)
 
 fclean: clean
+	@make fclean -C libft/
 	rm -f $(NAME)
 
 re: fclean all
