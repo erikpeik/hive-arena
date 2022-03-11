@@ -27,6 +27,7 @@ command_t think(agent_info_t info)
 	locate_hive(info.player, &hive_loc);
 	if (is_bee_with_flower(bee))
 	{
+		/* Return bee to Hive if it's next to */
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
 		if (hive_dir >= 0)
 		{
@@ -35,6 +36,7 @@ command_t think(agent_info_t info)
 				.direction = hive_dir
 			};
 		}
+		/* Find's direction where is Hive */
 		hive_dir = return_to_hive(info, hive_loc);
 		hive_dir = is_cell_free(info, hive_dir);
 		if (hive_dir >= 0)
@@ -44,6 +46,7 @@ command_t think(agent_info_t info)
 				.direction = hive_dir
 			};
 		}
+		/* Move random direction */
 		return (command_t) {
 			.action = MOVE,
 			.direction = rand() % 8
