@@ -2,24 +2,9 @@
 
 int fd;
 
-command_t think(agent_info_t info)
+coords_t locate_hive(int player, coords_t hive_loc)
 {
-	static int	arr[NUM_ROWS][NUM_COLS];
-	int	flower_dir;
-	coords_t hive_loc;
-
-	if (info.turn == 0 || info.turn == 1)
-	{
-		fd = open("map_log", O_RDWR);
-		if (fd < 0)
-			panic("Open failed");
-		initialize_map(arr);
-	}
-	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
-	update_map(arr, info);
-//	ft_putstr_fd((const char *)arr[info.row], fd);
-	print_map(arr, fd, info);
-	if (info.player == 0)
+	if (player == 0)
 	{
 		hive_loc.row = (NUM_ROWS / 2);
 		hive_loc.col = 1;
@@ -29,6 +14,32 @@ command_t think(agent_info_t info)
 		hive_loc.row = (NUM_ROWS / 2);
 		hive_loc.col = (NUM_COLS - 2);
 	}
+	return (hive_loc);
+}
+
+command_t think(agent_info_t info)
+{
+	static int	arr[NUM_ROWS][NUM_COLS];
+	int	flower_dir;
+	coords_t hive_loc;
+
+	/* Creating the map */
+	if (info.turn == 0 || info.turn == 1)
+	{
+		fd = open("map_log", O_RDWR);
+		if (fd < 0)
+			panic("Open failed");
+		initialize_map(arr);
+	}
+
+	/* Update map with area what current bee can see */
+	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
+	update_map(arr, info);
+	//ft_putstr_fd((const char *)arr[info.row], fd);
+	print_map(arr, fd, info);
+
+	/* Locate home Hive */
+	hive_loc = locate_hive(info.player, hive_loc);
 	if (is_bee_with_flower(bee))
 	{
 		int	hive_dir = find_neighbour(info, hive_cell(info.player));
