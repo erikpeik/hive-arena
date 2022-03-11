@@ -1,12 +1,9 @@
-<<<<<<< HEAD
-*.log.gz
-*.o
-=======
 *.o
 src/arena
 src/libagent.a
 example-agent/agent
 example-agent-emende/agent
+example-agent-emende/map_log
 example-agent-lua/agent
 example-agent-python/agent
 bin
@@ -14,4 +11,6 @@ bin
 *.log.gz
 __pycache__
 *.pyc
->>>>>>> 8e26ab3cdfff4bbaa19d7cecdfd561e26d41b550
+=======
+.DS_Store
+*/.DS_Store
