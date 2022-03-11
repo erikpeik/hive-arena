@@ -164,8 +164,7 @@ int	is_cell_free(agent_info_t info, int dir)
 command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
-	int	flower_dir;
-	int rand_dir;
+	int	flower_dir, cloud_dir;
 	coords_t hive_loc;
 
 	/* Creating the map */
@@ -237,6 +236,16 @@ command_t think(agent_info_t info)
 			return (command_t) {
 				.action = MOVE,
 				.direction = flower_dir
+			};
+		}
+		cloud_dir = open_map(arr, info, -1);
+		if (cloud_dir >= 0)
+			cloud_dir = is_cell_free(info, cloud_dir);
+		if (cloud_dir >= 0)
+		{
+			return (command_t) {
+				.action = MOVE,
+				.direction = cloud_dir
 			};
 		}
 		return (command_t) {
