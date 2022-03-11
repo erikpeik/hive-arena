@@ -3,7 +3,7 @@ CFLAGS=-Wall -Wextra -O3 -flto
 CPPFLAGS=-I../src
 LDFLAGS=-flto -L../bin -lagent
 
-OBJS=main.o print_map.o initialize_and_update.o fov.o return_to_hive.o
+OBJS=main.o print_map.o initialize_and_update.o fov.o return_to_hive.o circle_around.o is_cell_free.o locate_hive.o open_map.o
 NAME=agent
 
 all: $(NAME)
