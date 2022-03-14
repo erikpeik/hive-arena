@@ -17,7 +17,7 @@ void	locate_hive(int player, coords_t *hive_loc);
 int	return_to_hive(agent_info_t info, coords_t hive_loc);
 int	find_distant(agent_info_t info, cell_t type);
 int	find_neighbour(agent_info_t info, cell_t type);
-int	open_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type);
+int	open_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, coords_t targets[5]);
 int	is_cell_free(agent_info_t info, int dir);
 coords_t	circle_around(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, int offset);
 
