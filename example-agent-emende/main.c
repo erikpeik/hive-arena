@@ -9,6 +9,7 @@ command_t think(agent_info_t info)
 	int	flower_dir, cloud_dir, enemy_dir;
 	coords_t hive_loc;
 
+
 	/* Creating the map */
 	if (info.turn == 0 || info.turn == 1)
 	{
@@ -17,6 +18,8 @@ command_t think(agent_info_t info)
 			panic("Open failed");
 		initialize_map(arr);
 	}
+	targets[info.bee].col = -1;
+	targets[info.bee].row = -1;
 
 	/* Update map with area what current bee can see */
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
@@ -59,8 +62,8 @@ command_t think(agent_info_t info)
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
 		{
-			targets[info.bee].col = -1;
-			targets[info.bee].row = -1;
+//			targets[info.bee].col = -1;
+//			targets[info.bee].row = -1;
 			return (command_t) {
 				.action = FORAGE,
 				.direction = flower_dir
