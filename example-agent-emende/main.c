@@ -5,7 +5,8 @@ int fd;
 command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
-	int	flower_dir, cloud_dir;
+	static coords_t	targets[5];
+	int	flower_dir, cloud_dir, enemy_dir;
 	coords_t hive_loc;
 
 	/* Creating the map */
@@ -58,6 +59,8 @@ command_t think(agent_info_t info)
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
 		{
+			targets[info.bee].col = -1;
+			targets[info.bee].row = -1;
 			return (command_t) {
 				.action = FORAGE,
 				.direction = flower_dir
@@ -74,8 +77,58 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
+		/* Are there enemies with flowers nearby */
+		if (info.player == 0)
+		{
+			enemy_dir = find_neighbour(info, BEE_1_WITH_FLOWER);
+			if (enemy_dir >= 0)
+			{
+				return (command_t) {
+					.action = GUARD,
+					.direction = enemy_dir
+				};
+			}
+		}
+		else
+		{
+			enemy_dir = find_neighbour(info, BEE_0_WITH_FLOWER);
+			if (enemy_dir >= 0)
+			{
+				return (command_t) {
+					.action = GUARD,
+					.direction = enemy_dir
+				};
+			}
+		}
+		/* Are there enemies with flowers that we can see */
+		if (info.player == 0)
+		{
+			enemy_dir = find_distant(info, BEE_1_WITH_FLOWER);
+			if (enemy_dir >= 0)
+				enemy_dir = is_cell_free(info, enemy_dir);
+			if (enemy_dir >= 0)
+			{
+				return (command_t) {
+					.action = MOVE,
+					.direction = enemy_dir
+				};
+			}
+		}
+		else
+		{
+			enemy_dir = find_distant(info, BEE_0_WITH_FLOWER);
+			if (enemy_dir >= 0)
+				enemy_dir = is_cell_free(info, enemy_dir);
+			if (enemy_dir >= 0)
+			{
+				return (command_t) {
+					.action = MOVE,
+					.direction = enemy_dir
+				};
+			}
+		}
 		/* Looking flowers in map */
-		flower_dir = open_map(arr, info, FLOWER);
+		flower_dir = open_map(arr, info, FLOWER, targets);
 		if (flower_dir >= 0)
 			flower_dir = is_cell_free(info, flower_dir);
 		if (flower_dir >= 0)
@@ -86,7 +139,7 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* Looking not visited places in map */
-		cloud_dir = open_map(arr, info, -1);
+		cloud_dir = open_map(arr, info, -1, targets);
 		if (cloud_dir >= 0)
 			cloud_dir = is_cell_free(info, cloud_dir);
 		if (cloud_dir >= 0)
@@ -95,6 +148,34 @@ command_t think(agent_info_t info)
 				.action = MOVE,
 				.direction = cloud_dir
 			};
+		}
+		/* Look for enemies with flower(s) from MAP */
+		if (info.player == 0)
+		{
+			enemy_dir = open_map(arr, info, BEE_1_WITH_FLOWER, targets);
+			if (enemy_dir >= 0)
+				enemy_dir = is_cell_free(info, enemy_dir);
+			if (enemy_dir >= 0)
+			{
+				return (command_t) {
+					.action = MOVE,
+					.direction = enemy_dir
+				};
+			}
+		}
+		else
+		{
+			enemy_dir = open_map(arr, info, BEE_0_WITH_FLOWER, targets);
+			if (enemy_dir >= 0)
+				enemy_dir = is_cell_free(info, enemy_dir);
+			if (enemy_dir >= 0)
+			{
+				return (command_t) {
+					.action = MOVE,
+					.direction = enemy_dir
+				};
+			}
+
 		}
 		/* Move random direction */
 		return (command_t) {
