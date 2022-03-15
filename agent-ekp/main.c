@@ -264,7 +264,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "Breaking the Wall";
+	char *team_name = "EPK";
 
 	agent_main(host, port, team_name, think);
 }

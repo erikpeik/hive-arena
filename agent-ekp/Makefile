@@ -12,7 +12,7 @@ $(NAME): $(OBJS)
 	rm -f map_log
 	touch map_log
 	@make -C libft/
-	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) -Llibft/ -lft -I libft/includes
+	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) -Llibft/ -lft -I libft
 
 clean:
 	@make clean -C libft/

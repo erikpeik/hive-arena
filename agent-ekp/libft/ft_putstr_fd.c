@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: emende <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: emende <emende@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/01 22:09:47 by emende            #+#    #+#             */
-/*   Updated: 2021/12/06 19:07:39 by emende           ###   ########.fr       */
+/*   Updated: 2022/03/15 15:23:50 by emende           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,5 @@
 void	ft_putstr_fd(char const *s, int fd)
 {
 	if (s)
-		write(fd, &*s, ft_strlen(s));
+		write(fd, &*s, strlen(s));
 }

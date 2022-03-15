@@ -8,7 +8,7 @@
 # include <fcntl.h>
 # include "agent.h"
 # include <string.h>
-# include "libft/includes/libft.h"
+# include "libft/libft.h"
 
 void	print_map(int arr[NUM_ROWS][NUM_COLS], int fd, agent_info_t info, coords_t targets[5]);
 void	update_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info);

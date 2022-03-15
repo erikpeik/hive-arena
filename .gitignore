@@ -1,11 +1,11 @@
 *.o
 src/arena
 src/libagent.a
-example-agent/agent
-example-agent-emende/agent
-example-agent-emende/map_log
-example-agent-emende/libft/*.a
-example-agent-emende/libft/*.o
+agent-ekp/agent
+agent-ekp/agent
+agent-ekp/map_log
+agent-ekp/libft/*.a
+agent-ekp/libft/*.o
 example-agent-lua/agent
 example-agent-python/agent
 bin
@@ -15,6 +15,6 @@ __pycache__
 *.pyc
 .DS_Store
 */.DS_Store
-example-agent-emende/old/
+agent-ekp/old/
 old/
 .vscode
