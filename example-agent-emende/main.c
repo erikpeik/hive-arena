@@ -6,8 +6,9 @@ command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	flower_dir, cloud_dir, enemy_dir;
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, temp;					//
 	coords_t hive_loc;
+
 
 	/* Creating the map */
 	if (info.turn == 0 || info.turn == 1)
@@ -17,19 +18,21 @@ command_t think(agent_info_t info)
 			panic("Open failed");
 		initialize_map(arr);
 	}
+	targets[info.bee].col = -1;
+	targets[info.bee].row = -1;
 
 	/* Update map with area what current bee can see */
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
 	update_map(arr, info);
 	//ft_putstr_fd((const char *)arr[info.row], fd);
-	print_map(arr, fd, info);
+	print_map(arr, fd, info, targets);
 
-	/* Locate home Hive */
+	/* Locate home HIVE */
 	locate_hive(info.player, &hive_loc);
 	if (is_bee_with_flower(bee))
 	{
-		/* Return bee to Hive if it's next to */
-		int	hive_dir = find_neighbour(info, hive_cell(info.player));
+		/* DROP flower in HIVE */
+		hive_dir = find_neighbour(info, hive_cell(info.player));
 		if (hive_dir >= 0)
 		{
 			return (command_t) {
@@ -37,8 +40,9 @@ command_t think(agent_info_t info)
 				.direction = hive_dir
 			};
 		}
-		/* Find's direction where is Hive */
+		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
+		temp = hive_dir;													//
 		hive_dir = is_cell_free(info, hive_dir);
 		if (hive_dir >= 0)
 			{
@@ -47,6 +51,12 @@ command_t think(agent_info_t info)
 				.direction = hive_dir
 			};
 		}
+		/* Breaking the WALL */												//
+		if (hive_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Move random direction */
 		return (command_t) {
 			.action = MOVE,
@@ -59,17 +69,18 @@ command_t think(agent_info_t info)
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
 		{
-			targets[info.bee].col = -1;
-			targets[info.bee].row = -1;
 			return (command_t) {
 				.action = FORAGE,
 				.direction = flower_dir
 			};
 		}
-		/* Looks flower in view distance */
-		flower_dir = find_distant(info, FLOWER);
+		/* Look for a flower in view distance */
+		flower_dir = find_distant(info, FLOWER, targets);
 		if (flower_dir >= 0)
+		{
+			temp = flower_dir;												//
 			flower_dir = is_cell_free(info, flower_dir);
+		}
 		if (flower_dir >= 0)
 		{
 			return (command_t) {
@@ -77,6 +88,12 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
+		/* Breaking the WALL */												//
+		if (flower_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Are there enemies with flowers nearby */
 		if (info.player == 0)
 		{
@@ -103,9 +120,12 @@ command_t think(agent_info_t info)
 		/* Are there enemies with flowers that we can see */
 		if (info.player == 0)
 		{
-			enemy_dir = find_distant(info, BEE_1_WITH_FLOWER);
+			enemy_dir = find_distant(info, BEE_1_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
+			{
+				temp = enemy_dir;
 				enemy_dir = is_cell_free(info, enemy_dir);
+			}
 			if (enemy_dir >= 0)
 			{
 				return (command_t) {
@@ -113,12 +133,21 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
+			/* Breaking the WALL */											//
+			if (enemy_dir == -2)
+				return (command_t) {
+					.action = GUARD,
+					.direction = temp
+			};
 		}
 		else
 		{
-			enemy_dir = find_distant(info, BEE_0_WITH_FLOWER);
+			enemy_dir = find_distant(info, BEE_0_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
+			{
+				temp = enemy_dir;
 				enemy_dir = is_cell_free(info, enemy_dir);
+			}
 			if (enemy_dir >= 0)
 			{
 				return (command_t) {
@@ -126,11 +155,20 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
+			/* Breaking the WALL */											//
+			if (enemy_dir == -2)
+				return (command_t) {
+					.action = GUARD,
+					.direction = temp
+			};
 		}
 		/* Looking flowers in map */
 		flower_dir = open_map(arr, info, FLOWER, targets);
 		if (flower_dir >= 0)
+		{
+			temp = flower_dir;
 			flower_dir = is_cell_free(info, flower_dir);
+		}
 		if (flower_dir >= 0)
 		{
 			return (command_t) {
@@ -138,10 +176,19 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
+		/* Breaking the WALL */												//
+		if (flower_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Looking not visited places in map */
 		cloud_dir = open_map(arr, info, -1, targets);
 		if (cloud_dir >= 0)
+		{
+			temp = cloud_dir;
 			cloud_dir = is_cell_free(info, cloud_dir);
+		}
 		if (cloud_dir >= 0)
 		{
 			return (command_t) {
@@ -149,12 +196,21 @@ command_t think(agent_info_t info)
 				.direction = cloud_dir
 			};
 		}
+		/* Breaking the WALL */												//
+		if (cloud_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Look for enemies with flower(s) from MAP */
 		if (info.player == 0)
 		{
 			enemy_dir = open_map(arr, info, BEE_1_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
+			{
+				temp = enemy_dir;
 				enemy_dir = is_cell_free(info, enemy_dir);
+			}
 			if (enemy_dir >= 0)
 			{
 				return (command_t) {
@@ -162,12 +218,21 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
+			/* Breaking the WALL */											//
+			if (enemy_dir == -2)
+				return (command_t) {
+					.action = GUARD,
+					.direction = temp
+			};
 		}
 		else
 		{
 			enemy_dir = open_map(arr, info, BEE_0_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
+			{
+				temp = enemy_dir;
 				enemy_dir = is_cell_free(info, enemy_dir);
+			}
 			if (enemy_dir >= 0)
 			{
 				return (command_t) {
@@ -175,7 +240,12 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
-
+			/* Breaking the WALL */											//
+			if (enemy_dir == -2)
+				return (command_t) {
+					.action = GUARD,
+					.direction = temp
+			};
 		}
 		/* Move random direction */
 		return (command_t) {
@@ -194,7 +264,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "Eerikin Pippuri Kebab";
+	char *team_name = "Breaking the Wall";
 
 	agent_main(host, port, team_name, think);
 }

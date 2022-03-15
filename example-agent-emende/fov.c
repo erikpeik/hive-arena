@@ -66,14 +66,39 @@ coords_t direction_to_coords_2(coords_t from, int direction)
 	};
 }
 
-int	find_distant(agent_info_t info, cell_t type)
+int	find_distant(agent_info_t info, cell_t type, coords_t targets[5])
 {
 	coords_t center = {VIEW_DISTANCE, VIEW_DISTANCE};
+	int	is_targeted	= 0;
+	int	i;
 
 	for (int dir = 0 ; dir < 16 ; dir++)
 	{
 		coords_t coords = direction_to_coords_2(center, dir);
 		cell_t distant = info.cells[coords.row][coords.col];
+		if (type == FLOWER && distant == FLOWER)
+		{
+			i = 0;
+			while (i < 5)
+			{
+				if (targets[i].row == coords.row + info.row - VIEW_DISTANCE && targets[i].col == coords.col + info.col - VIEW_DISTANCE)
+				{
+					is_targeted = 1;
+					break ;
+				}
+				i++;
+			}
+			if (is_targeted == 0)
+			{
+				targets[info.bee].row = coords.row + info.row - VIEW_DISTANCE;
+				targets[info.bee].col = coords.col + info.col- VIEW_DISTANCE;
+			}
+			else
+			{
+				is_targeted = 0;
+				continue ;
+			}
+		}
 		if (distant == type)
 			return (dir/2);
 	}
@@ -81,6 +106,29 @@ int	find_distant(agent_info_t info, cell_t type)
 	{
 		coords_t coords = direction_to_coords_3(center, dir);
 		cell_t distant = info.cells[coords.row][coords.col];
+		if (type == FLOWER && distant == FLOWER)
+		{
+			i = 0;
+			while (i < 5)
+			{
+				if (targets[i].row == coords.row + info.row - VIEW_DISTANCE && targets[i].col == coords.col + info.col - VIEW_DISTANCE)
+				{
+					is_targeted = 1;
+					break ;
+				}
+				i++;
+			}
+			if (is_targeted == 0)
+			{
+				targets[info.bee].row = coords.row + info.row - VIEW_DISTANCE;
+				targets[info.bee].col = coords.col + info.col - VIEW_DISTANCE;
+			}
+			else
+			{
+				is_targeted = 0;
+				continue ;
+			}
+		}
 		if (distant == type)
 			return (dir/3);
 	}
