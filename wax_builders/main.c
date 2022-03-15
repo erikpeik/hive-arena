@@ -23,8 +23,26 @@ int find_neighbour(agent_info_t info, cell_t type)
 
 command_t think(agent_info_t info)
 {
+    int center_dir;
+
     cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
 
+    /* Check side */
+    if (info.player == 0)
+            center_dir = 2;
+    else
+            center_dir = 6;
+        
+    /* While turns is under x, move towards center */
+    if (info.turn <= 100)
+    {
+        return (command_t) {
+            .action = MOVE,
+            .direction = center_dir
+        };
+    }
+    
+    
     if (is_bee_with_flower(bee))
     {
         int hive_dir = find_neighbour(info, hive_cell(info.player));
@@ -47,7 +65,7 @@ command_t think(agent_info_t info)
             };
         }
     }
-    int randomizer = rand () % 7;
+    int randomizer = rand () % 8;
     if (randomizer == 0)
     {
         return (command_t) {
