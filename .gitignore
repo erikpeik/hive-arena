@@ -16,6 +16,5 @@ __pycache__
 .DS_Store
 */.DS_Store
 example-agent-emende/old/
-before_targeting
 old/
 .vscode
