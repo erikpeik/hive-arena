@@ -80,8 +80,8 @@ int	find_distant(agent_info_t info, cell_t type, coords_t targets[5])
 		{
 			i = 0;
 			while (i < 5)
-			{	
-				if (targets[i].row == coords.row && targets[i].col == coords.col)
+			{
+				if (targets[i].row == coords.row + info.row - VIEW_DISTANCE && targets[i].col == coords.col + info.col - VIEW_DISTANCE)
 				{
 					is_targeted = 1;
 					break ;
@@ -90,15 +90,15 @@ int	find_distant(agent_info_t info, cell_t type, coords_t targets[5])
 			}
 			if (is_targeted == 0)
 			{
-				targets[info.bee].row = coords.row;
-				targets[info.bee].col = coords.col;
+				targets[info.bee].row = coords.row + info.row - VIEW_DISTANCE;
+				targets[info.bee].col = coords.col + info.col- VIEW_DISTANCE;
 			}
 			else
 			{
 				is_targeted = 0;
 				continue ;
 			}
-		}	
+		}
 		if (distant == type)
 			return (dir/2);
 	}
@@ -110,8 +110,8 @@ int	find_distant(agent_info_t info, cell_t type, coords_t targets[5])
 		{
 			i = 0;
 			while (i < 5)
-			{	
-				if (targets[i].row == coords.row && targets[i].col == coords.col)
+			{
+				if (targets[i].row == coords.row + info.row - VIEW_DISTANCE && targets[i].col == coords.col + info.col - VIEW_DISTANCE)
 				{
 					is_targeted = 1;
 					break ;
@@ -120,15 +120,15 @@ int	find_distant(agent_info_t info, cell_t type, coords_t targets[5])
 			}
 			if (is_targeted == 0)
 			{
-				targets[info.bee].row = coords.row;
-				targets[info.bee].col = coords.col;
+				targets[info.bee].row = coords.row + info.row - VIEW_DISTANCE;
+				targets[info.bee].col = coords.col + info.col - VIEW_DISTANCE;
 			}
 			else
 			{
 				is_targeted = 0;
 				continue ;
 			}
-		}	
+		}
 		if (distant == type)
 			return (dir/3);
 	}

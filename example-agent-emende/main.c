@@ -25,7 +25,7 @@ command_t think(agent_info_t info)
 	cell_t bee = info.cells[VIEW_DISTANCE][VIEW_DISTANCE];
 	update_map(arr, info);
 	//ft_putstr_fd((const char *)arr[info.row], fd);
-	print_map(arr, fd, info);
+	print_map(arr, fd, info, targets);
 
 	/* Locate home HIVE */
 	locate_hive(info.player, &hive_loc);

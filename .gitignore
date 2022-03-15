@@ -18,3 +18,4 @@ __pycache__
 example-agent-emende/old/
 before_targeting
 old/
+.vscode
