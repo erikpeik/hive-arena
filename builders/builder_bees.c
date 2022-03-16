@@ -79,8 +79,9 @@ command_t	builder_bees(agent_info_t info,  coords_t hive_loc)
 			}
 		}
 	}
-	return (command_t) {
+	return (build_direction(info));
+/*	return (command_t) {
 		.action = BUILD,
 		.direction = rand() % 8
-	};
+	}; */
 }
