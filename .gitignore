@@ -1,7 +1,7 @@
 *.o
 src/arena
 src/libagent.a
-agent-ekp/agent
+example-agent/agent
 agent-ekp/agent
 agent-ekp/map_log
 agent-ekp/libft/*.a
