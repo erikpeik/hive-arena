@@ -36,12 +36,12 @@ command_t think(agent_info_t info)
 		if (hive_loc.col > (NUM_COLS / 2))
 		{
 			spy_loc.col = NUM_COLS - (NUM_COLS / 2) - 2;
-			spy_loc.row = 10;
+			spy_loc.row = 9;
 		}
 		else
 		{
 			spy_loc.col = (NUM_COLS / 2) + 2;
-			spy_loc.row = 10;
+			spy_loc.row = 9;
 		}
 	}
 	if (info.bee == 4)
@@ -49,12 +49,12 @@ command_t think(agent_info_t info)
 		if (hive_loc.col > (NUM_COLS / 2))
 		{
 			spy_loc.col = NUM_COLS - (NUM_COLS / 2) - 2;
-			spy_loc.row = 14;
+			spy_loc.row = 15;
 		}
 		else
 		{
 			spy_loc.col = (NUM_COLS / 2) + 2;
-			spy_loc.row = 14;
+			spy_loc.row = 15;
 		}
 	}
 	if (is_bee_with_flower(bee))
@@ -234,6 +234,26 @@ command_t think(agent_info_t info)
 				.action = GUARD,
 				.direction = temp
 		};
+		/* Looking not visited places in map */
+		cloud_dir = open_map(arr, info, -1, targets);
+		if (cloud_dir >= 0)
+		{
+			temp = cloud_dir;
+			cloud_dir = is_cell_free(info, cloud_dir);
+		}
+		if (cloud_dir >= 0)
+		{
+			return (command_t) {
+				.action = MOVE,
+				.direction = cloud_dir
+			};
+		}
+		/* Breaking the WALL */
+		if (cloud_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Look for enemies with flower(s) from MAP */
 		if (info.player == 0)
 		{
@@ -279,26 +299,6 @@ command_t think(agent_info_t info)
 					.direction = temp
 			};
 		}
-		/* Looking not visited places in map */
-		cloud_dir = open_map(arr, info, -1, targets);
-		if (cloud_dir >= 0)
-		{
-			temp = cloud_dir;
-			cloud_dir = is_cell_free(info, cloud_dir);
-		}
-		if (cloud_dir >= 0)
-		{
-			return (command_t) {
-				.action = MOVE,
-				.direction = cloud_dir
-			};
-		}
-		/* Breaking the WALL */
-		if (cloud_dir == -2)
-			return (command_t) {
-				.action = GUARD,
-				.direction = temp
-		};
 		/* Move random direction */
 		return (command_t) {
 			.action = MOVE,
