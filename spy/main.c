@@ -320,7 +320,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "Spy vs Spy";
+	char *team_name = "S&D";
 
 	agent_main(host, port, team_name, think);
 }
