@@ -6,7 +6,7 @@ command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	hive_dir, flower_dir, cloud_dir, enemy_dir, spy_dir, temp;				//spy
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, spy_dir, temp, temp_action;				//spy
 	coords_t hive_loc, spy_loc;													//spy
 
 
@@ -34,28 +34,18 @@ command_t think(agent_info_t info)
 	if (info.bee == 0)
 	{
 		if (hive_loc.col > (NUM_COLS / 2))
-		{
-			spy_loc.col = NUM_COLS - (NUM_COLS / 2) - 2;
-			spy_loc.row = 9;
-		}
+			spy_loc.col = 3;
 		else
-		{
-			spy_loc.col = (NUM_COLS / 2) + 2;
-			spy_loc.row = 9;
-		}
+			spy_loc.col = 26;
+		spy_loc.row = 10;
 	}
 	if (info.bee == 4)
 	{
 		if (hive_loc.col > (NUM_COLS / 2))
-		{
-			spy_loc.col = NUM_COLS - (NUM_COLS / 2) - 2;
-			spy_loc.row = 15;
-		}
+			spy_loc.col = 3;
 		else
-		{
-			spy_loc.col = (NUM_COLS / 2) + 2;
-			spy_loc.row = 15;
-		}
+			spy_loc.col = 26;
+		spy_loc.row = 14;
 	}
 	if (is_bee_with_flower(bee))
 	{
@@ -91,7 +81,7 @@ command_t think(agent_info_t info)
 			.direction = rand() % 8
 		};
 	}
-	else if ((info.turn < 160 && info.bee == 0) || (info.turn < 164 && info.bee == 4)) //spy
+	else if ((info.turn < 149 && info.bee == 0) || (info.turn < 149 && info.bee == 4)) //spy
 	{
 		spy_dir = return_to_hive(info, spy_loc);
 		temp = spy_dir;
@@ -121,8 +111,22 @@ command_t think(agent_info_t info)
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
 		{
+			if (info.player == 0)
+			{
+				if (info.col >= NUM_COLS/2 + 3)
+					temp_action = GUARD;
+				else
+					temp_action = FORAGE;
+			}
+			else
+			{
+				if (info.col >= NUM_COLS/2 - 3)
+					temp_action = FORAGE;
+				else
+					temp_action = GUARD;
+			}
 			return (command_t) {
-				.action = FORAGE,
+				.action = temp_action,
 				.direction = flower_dir
 			};
 		}
