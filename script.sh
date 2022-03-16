@@ -47,7 +47,7 @@ do
 	then
 		let "count1=count1+1"
 		echo "$teamname1 win!"
-	elsei
+	else
 		let "count2=count2+1"
 		echo "$teamname2 win!"
 	fi
