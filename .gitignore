@@ -2,10 +2,6 @@
 src/arena
 src/libagent.a
 example-agent/agent
-agent-ekp/agent
-agent-ekp/map_log
-agent-ekp/libft/*.a
-agent-ekp/libft/*.o
 example-agent-lua/agent
 example-agent-python/agent
 bin
@@ -15,6 +11,6 @@ __pycache__
 *.pyc
 .DS_Store
 */.DS_Store
-agent-ekp/old/
 old/
 .vscode
+wax_builders/agent
