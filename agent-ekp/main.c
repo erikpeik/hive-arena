@@ -6,8 +6,8 @@ command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	hive_dir, flower_dir, cloud_dir, enemy_dir, temp;					//
-	coords_t hive_loc;
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, temp, temp_action;			//spy
+	coords_t hive_loc;									//spy
 
 
 	/* Creating the map */
@@ -29,6 +29,7 @@ command_t think(agent_info_t info)
 
 	/* Locate home HIVE */
 	locate_hive(info.player, &hive_loc);
+
 	if (is_bee_with_flower(bee))
 	{
 		/* DROP flower in HIVE */
@@ -43,23 +44,54 @@ command_t think(agent_info_t info)
 		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
 		temp = hive_dir;
-		if((abs(hive_loc.row - info.row) <= 3) || (abs(hive_loc.col - info.col) <= 3))//!!!
+		if((abs(hive_loc.row - info.row) <= 3) && (abs(hive_loc.col - info.col) <= 3))
+		{
 			hive_dir = is_cell_wax(info, hive_dir);
-		else
-			hive_dir = is_cell_free(info, hive_dir);
-		if (hive_dir >= 0)
+			if (hive_dir >= 0)
+				{
+				return (command_t) {
+					.action = MOVE,
+					.direction = hive_dir
+				};
+			}
+			/* Breaking the WALL */
+			if (hive_dir < 0)
 			{
-			return (command_t) {
-				.action = MOVE,
-				.direction = hive_dir
+				if (hive_dir == -11)
+				{
+					/* Move random direction */
+					return (command_t) {
+						.action = MOVE,
+						.direction = rand() % 8
+					};
+				}
+				if (hive_dir == -10)
+					hive_dir = 0;
+				else
+					hive_dir = hive_dir * -1;
+				return (command_t) {
+					.action = GUARD,
+					.direction = hive_dir
+				};
+			}
+		}
+		else
+		{
+			hive_dir = is_cell_free(info, hive_dir);
+			if (hive_dir >= 0)
+				{
+				return (command_t) {
+					.action = MOVE,
+					.direction = hive_dir
+				};
+			}
+			/* Breaking the WALL */
+			if (hive_dir == -2)
+				return (command_t) {
+					.action = GUARD,
+					.direction = temp
 			};
 		}
-		/* Breaking the WALL */
-		if (hive_dir == -2)
-			return (command_t) {
-				.action = GUARD,
-				.direction = temp
-		};
 		/* Move random direction */
 		return (command_t) {
 			.action = MOVE,
@@ -72,8 +104,22 @@ command_t think(agent_info_t info)
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
 		{
+			if (info.player == 0)
+			{
+				if (info.col >= NUM_COLS/2 + 10)
+					temp_action = GUARD;
+				else
+					temp_action = FORAGE;
+			}
+			else
+			{
+				if (info.col >= NUM_COLS/2 - 10)
+					temp_action = FORAGE;
+				else
+					temp_action = GUARD;
+			}
 			return (command_t) {
-				.action = FORAGE,
+				.action = temp_action,
 				.direction = flower_dir
 			};
 		}
@@ -81,7 +127,7 @@ command_t think(agent_info_t info)
 		flower_dir = find_distant(info, FLOWER, targets);
 		if (flower_dir >= 0)
 		{
-			temp = flower_dir;												//
+			temp = flower_dir;
 			flower_dir = is_cell_free(info, flower_dir);
 		}
 		if (flower_dir >= 0)
@@ -91,7 +137,7 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
-		/* Breaking the WALL */												//
+		/* Breaking the WALL */
 		if (flower_dir == -2)
 			return (command_t) {
 				.action = GUARD,
@@ -136,7 +182,7 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
-			/* Breaking the WALL */											//
+			/* Breaking the WALL */
 			if (enemy_dir == -2)
 				return (command_t) {
 					.action = GUARD,
@@ -158,7 +204,7 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
-			/* Breaking the WALL */											//
+			/* Breaking the WALL */
 			if (enemy_dir == -2)
 				return (command_t) {
 					.action = GUARD,
@@ -179,7 +225,7 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
-		/* Breaking the WALL */												//
+		/* Breaking the WALL */
 		if (flower_dir == -2)
 			return (command_t) {
 				.action = GUARD,
@@ -199,7 +245,7 @@ command_t think(agent_info_t info)
 				.direction = cloud_dir
 			};
 		}
-		/* Breaking the WALL */												//
+		/* Breaking the WALL */
 		if (cloud_dir == -2)
 			return (command_t) {
 				.action = GUARD,
@@ -221,7 +267,7 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
-			/* Breaking the WALL */											//
+			/* Breaking the WALL */
 			if (enemy_dir == -2)
 				return (command_t) {
 					.action = GUARD,
@@ -243,7 +289,7 @@ command_t think(agent_info_t info)
 					.direction = enemy_dir
 				};
 			}
-			/* Breaking the WALL */											//
+			/* Breaking the WALL */
 			if (enemy_dir == -2)
 				return (command_t) {
 					.action = GUARD,
@@ -267,7 +313,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "EPK";
+	char *team_name = "EPK_smart";
 
 	agent_main(host, port, team_name, think);
 }

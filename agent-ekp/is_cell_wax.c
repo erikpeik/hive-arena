@@ -14,15 +14,19 @@ static const coords_t offsets[] = {
 int	is_cell_wax(agent_info_t info, int dir)
 {
 	int ofs = 1;
-	int wax = 0;
 	int temp;
 	coords_t offset = offsets[dir];
 	cell_t cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 	if (cell_info == EMPTY)
 		return (dir);
 	if (cell_info == WALL)
-		return (-2);
-	while (ofs <= 1)						//
+	{
+		if (dir == 0)
+			return (-10);
+		else
+			return (-dir);
+	}
+	while (ofs <= 1)
 	{
 		temp = dir;
 		if (dir + ofs > 7)
@@ -31,8 +35,13 @@ int	is_cell_wax(agent_info_t info, int dir)
 		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 		if (cell_info == EMPTY)
 			return (temp + ofs);
-		if (cell_info == WALL)				//
-			return (-2);					//
+		if (cell_info == WALL)
+		{
+			if (temp + ofs == 0)
+				return (-10);
+			else
+				return (-1 * (temp + ofs));
+		}
 		temp = dir;
 		if (dir - ofs < 0)
 			temp = 8;
@@ -40,9 +49,14 @@ int	is_cell_wax(agent_info_t info, int dir)
 		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 		if (cell_info == EMPTY)
 			return (temp - ofs);
-		if (cell_info == WALL)				//
-			return (-2);					//
+		if (cell_info == WALL)
+		{
+			if (temp - ofs == 0)
+				return (-10);
+			else
+				return (-1 * (temp - ofs));
+		}
 		ofs++;
 	}
-	return (-1);
+	return (-11);
 }
