@@ -14,3 +14,4 @@ __pycache__
 old/
 .vscode
 wax_builders/agent
+agent
