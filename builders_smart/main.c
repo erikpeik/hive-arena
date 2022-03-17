@@ -63,11 +63,17 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* Breaking the WALL */
-		if (hive_dir == -2)
+		if (hive_dir < 0)
+		{
+			if (hive_dir == -10)
+				hive_dir = 0;
+			else
+				hive_dir = hive_dir * -1;
 			return (command_t) {
 				.action = GUARD,
-				.direction = temp
-		};
+				.direction = hive_dir
+			};
+		}
 		/* Move random direction */
 		return (command_t) {
 			.action = MOVE,
