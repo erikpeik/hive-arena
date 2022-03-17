@@ -51,10 +51,10 @@ command_t think(agent_info_t info)
 		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
 		temp = hive_dir;
-//		if((abs(hive_loc.row - info.row) <= 3) || (abs(hive_loc.col - info.col) <= 3))//!!!
-//			hive_dir = is_cell_wax(info, hive_dir);
-//		else
-		hive_dir = is_cell_free(info, hive_dir);
+		if((abs(hive_loc.row - info.row) <= 3) || (abs(hive_loc.col - info.col) <= 3))//!!!
+			hive_dir = is_cell_wax(info, hive_dir);
+		else
+			hive_dir = is_cell_free(info, hive_dir);
 		if (hive_dir >= 0)
 			{
 			return (command_t) {
@@ -288,7 +288,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "Builders";
+	char *team_name = "Builders_smart";
 
 	agent_main(host, port, team_name, think);
 }

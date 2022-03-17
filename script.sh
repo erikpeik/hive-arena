@@ -15,7 +15,7 @@ team1=$(basename $1)
 team2=$(basename $2)
 
 teamname1="Builders"
-teamname2="Search & Destroy"
+teamname2="Builders_smart"
 port=8000
 
 count1=0
