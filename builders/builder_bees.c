@@ -21,9 +21,32 @@ command_t	builder_bees(agent_info_t info,  coords_t hive_loc)
 			spy_loc.col = 28;
 		spy_loc.row = 13;
 	}
-
-	if ((info.bee == 0 && info.col != spy_loc.col) || (info.bee == 4 && info.col != spy_loc.col)) //spy
+	if (info.col != spy_loc.col)
 	{
+		spy_dir = return_to_hive(info, spy_loc);
+		temp = spy_dir;
+		spy_dir = is_cell_free(info, spy_dir);
+		if (spy_dir >= 0)
+			{
+			return (command_t) {
+				.action = MOVE,
+				.direction = spy_dir
+			};
+		}
+		/* Breaking the WALL */
+		if (spy_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
+		/* Move random direction */
+		return (command_t) {
+			.action = MOVE,
+			.direction = rand() % 8
+		};
+	}
+	else if (info.row != spy_loc.row)
+		{
 		spy_dir = return_to_hive(info, spy_loc);
 		temp = spy_dir;
 		spy_dir = is_cell_free(info, spy_dir);

@@ -28,7 +28,7 @@ int	is_cell_free(agent_info_t info, int dir)
 			return (-2);					//
 		temp = dir;
 		if (dir + ofs > 7)
-			temp = -1 + ofs;
+			temp = -1;
 		offset = offsets[temp + ofs];
 		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 		if (cell_info == EMPTY)
@@ -37,7 +37,7 @@ int	is_cell_free(agent_info_t info, int dir)
 			wax++;							//
 		temp = dir;
 		if (dir - ofs < 0)
-			temp = 8 - ofs;
+			temp = 8;
 		offset = offsets[temp - ofs];
 		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 		if (cell_info == EMPTY)
