@@ -25,49 +25,67 @@ command_t	builder_bees(agent_info_t info,  coords_t hive_loc)
 	{
 		spy_dir = return_to_hive(info, spy_loc);
 		temp = spy_dir;
-		spy_dir = is_cell_free(info, spy_dir);
+		spy_dir = is_cell_wax(info, spy_dir);
 		if (spy_dir >= 0)
-			{
+		{
 			return (command_t) {
 				.action = MOVE,
 				.direction = spy_dir
 			};
 		}
 		/* Breaking the WALL */
-		if (spy_dir == -2)
+		if (spy_dir < 0)
+		{
+			if (spy_dir == -11)
+			{
+				/* Move random direction */
+				return (command_t) {
+					.action = MOVE,
+					.direction = rand() % 8
+				};
+			}
+			if (spy_dir == -10)
+				spy_dir = 0;
+			else
+				spy_dir = spy_dir * -1;
 			return (command_t) {
 				.action = GUARD,
-				.direction = temp
-		};
-		/* Move random direction */
-		return (command_t) {
-			.action = MOVE,
-			.direction = rand() % 8
-		};
+				.direction = spy_dir
+			};
+		}
 	}
 	else if (info.row != spy_loc.row)
 		{
 		spy_dir = return_to_hive(info, spy_loc);
 		temp = spy_dir;
-		spy_dir = is_cell_free(info, spy_dir);
+		spy_dir = is_cell_wax(info, spy_dir);
 		if (spy_dir >= 0)
-			{
+		{
 			return (command_t) {
 				.action = MOVE,
 				.direction = spy_dir
 			};
 		}
 		/* Breaking the WALL */
-		if (spy_dir == -2)
+		if (spy_dir < 0)
+		{
+			if (spy_dir == -11)
+			{
+				/* Move random direction */
+				return (command_t) {
+					.action = MOVE,
+					.direction = rand() % 8
+				};
+			}
+			if (spy_dir == -10)
+				spy_dir = 0;
+			else
+				spy_dir = spy_dir * -1;
 			return (command_t) {
 				.action = GUARD,
-				.direction = temp
-		};
-		/* Move random direction */
-		return (command_t) {
-			.action = MOVE,
-			.direction = rand() % 8
-		};
+				.direction = spy_dir
+			};
+		}
 	}
 	else
 	{
