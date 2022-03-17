@@ -147,14 +147,14 @@ command_t think(agent_info_t info)
 		{
 			if (info.player == 0)
 			{
-				if (info.col >= NUM_COLS/2 + 3)
+				if (info.col >= NUM_COLS/2 + 10)
 					temp_action = GUARD;
 				else
 					temp_action = FORAGE;
 			}
 			else
 			{
-				if (info.col >= NUM_COLS/2 - 3)
+				if (info.col >= NUM_COLS/2 - 10)
 					temp_action = FORAGE;
 				else
 					temp_action = GUARD;
