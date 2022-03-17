@@ -65,6 +65,14 @@ command_t think(agent_info_t info)
 		/* Breaking the WALL */
 		if (hive_dir < 0)
 		{
+			if (hive_dir == -11)
+			{
+				/* Move random direction */
+				return (command_t) {
+					.action = MOVE,
+					.direction = rand() % 8
+				};
+			}
 			if (hive_dir == -10)
 				hive_dir = 0;
 			else
