@@ -1,6 +1,6 @@
 #include "agent_pippuri.h"
 
-//int fd;
+int fd;
 
 command_t think(agent_info_t info)
 {

@@ -14,7 +14,6 @@ static const coords_t offsets[] = {
 int	is_cell_wax(agent_info_t info, int dir)
 {
 	int ofs = 1;
-	int wax = 0;
 	int temp;
 	coords_t offset = offsets[dir];
 	cell_t cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
