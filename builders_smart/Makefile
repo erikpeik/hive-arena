@@ -5,7 +5,7 @@ LDFLAGS=-flto -L../bin -lagent
 
 OBJS=main.o print_map.o initialize_and_update.o fov.o return_to_hive.o \
 	circle_around.o is_cell_free.o locate_hive.o open_map.o builder_bees.o \
-	build_direction.o is_cell_wax.o
+	build_direction.o is_cell_wax.o is_cell_wax_city.o
 
 NAME=agent
 

@@ -6,7 +6,7 @@ command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	hive_dir, flower_dir, cloud_dir, enemy_dir, temp, temp_action;
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, esc_dir, temp, temp_action;
 	coords_t hive_loc;
 	command_t	catcher;
 
@@ -107,6 +107,27 @@ command_t think(agent_info_t info)
 	}
 	else
 	{
+/*		ESCAPE FROM THE WAX CITY
+		if (info.col == 0 || info.col == 29)
+		{
+			esc_dir = is_cell_wax_city(info, N);
+			if (esc_dir == N)
+				esc_dir = is_cell_wax_city(info, S);
+			if (esc_dir == S)
+			{
+				return (command_t) {
+					.action = GUARD,
+					.direction = S
+				};
+			}
+			else
+			{
+				return (command_t) {
+					.action = MOVE,
+					.direction = S
+				};
+			}
+		} 												*/
 		/* Pick flower if it's neightbour */
 		flower_dir = find_neighbour(info, FLOWER);
 		if (flower_dir >= 0)
