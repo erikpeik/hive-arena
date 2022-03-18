@@ -1,6 +1,6 @@
 #include "agent_pippuri.h"
 
-int fd;
+//int fd;
 
 command_t think(agent_info_t info)
 {
@@ -11,9 +11,9 @@ command_t think(agent_info_t info)
 	/* Creating the map */
 	if (info.turn == 0 || info.turn == 1)
 	{
-		fd = open("map_log", O_RDWR);
-		if (fd < 0)
-			panic("Open failed");
+//		fd = open("map_log", O_RDWR);
+//		if (fd < 0)
+//			panic("Open failed");
 		initialize_map(arr);
 	}
 
