@@ -131,7 +131,7 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* ESCAPE FROM WAX CITY */
-		if (abs(hive_loc.row - info.row) < 2) //<- 2 needs testing, 3 works!
+		if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
 		{
 			if ((info.col == 0) || (info.col == 29))
 			{
@@ -220,6 +220,46 @@ command_t think(agent_info_t info)
 				};
 			}
 		}
+		/* Looking flowers in map */
+		flower_dir = open_map(arr, info, FLOWER, targets);
+		if (flower_dir >= 0)
+		{
+			temp = flower_dir;
+			flower_dir = is_cell_free(info, flower_dir);
+		}
+		if (flower_dir >= 0)
+		{
+			return (command_t) {
+				.action = MOVE,
+				.direction = flower_dir
+			};
+		}
+		/* Breaking the WALL */
+		if (flower_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
+		/* Looking not visited places in map */
+		cloud_dir = open_map(arr, info, -1, targets);
+		if (cloud_dir >= 0)
+		{
+			temp = cloud_dir;
+			cloud_dir = is_cell_free(info, cloud_dir);
+		}
+		if (cloud_dir >= 0)
+		{
+			return (command_t) {
+				.action = MOVE,
+				.direction = cloud_dir
+			};
+		}
+		/* Breaking the WALL */
+		if (cloud_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Are there enemies with flowers that we can see */
 		if (info.player == 0)
 		{
@@ -265,46 +305,6 @@ command_t think(agent_info_t info)
 					.direction = temp
 			};
 		}
-		/* Looking flowers in map */
-		flower_dir = open_map(arr, info, FLOWER, targets);
-		if (flower_dir >= 0)
-		{
-			temp = flower_dir;
-			flower_dir = is_cell_free(info, flower_dir);
-		}
-		if (flower_dir >= 0)
-		{
-			return (command_t) {
-				.action = MOVE,
-				.direction = flower_dir
-			};
-		}
-		/* Breaking the WALL */
-		if (flower_dir == -2)
-			return (command_t) {
-				.action = GUARD,
-				.direction = temp
-		};
-		/* Looking not visited places in map */
-		cloud_dir = open_map(arr, info, -1, targets);
-		if (cloud_dir >= 0)
-		{
-			temp = cloud_dir;
-			cloud_dir = is_cell_free(info, cloud_dir);
-		}
-		if (cloud_dir >= 0)
-		{
-			return (command_t) {
-				.action = MOVE,
-				.direction = cloud_dir
-			};
-		}
-		/* Breaking the WALL */
-		if (cloud_dir == -2)
-			return (command_t) {
-				.action = GUARD,
-				.direction = temp
-		};
 		/* Look for enemies with flower(s) from MAP */
 		if (info.player == 0)
 		{
