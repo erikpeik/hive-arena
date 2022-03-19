@@ -22,6 +22,7 @@ RED = \033[0;31m
 LGRAY = \033[1;30m
 LGREEN = \033[1;32m
 WHITE = \033[1;37m
+NC=\033[0m
 
 all: $(NAME)
 
@@ -30,14 +31,14 @@ $(NAME):
 	@gcc $(CFLAG) -c $(SRCS)
 #	@echo "$(LGRAY)[LIBFT] $(LGREEN)Crating library from object files..."
 	@ar rcs $(NAME) $(OBJS)
-	@echo "$(LGRAY)[LIBFT] $(LGREEN)Libft compiled..."
+	@echo "$(LGRAY)[LIBFT] $(LGREEN)Libft compiled...$(NC)"
 
 clean:
-	@echo "$(LGRAY)[LIBFT] $(RED)Cleaning object files..."
+	@echo "$(LGRAY)[LIBFT] $(RED)Cleaning object files...$(NC)"
 	@/bin/rm -f $(OBJS)
 
 fclean: clean
-	@echo "$(LGRAY)[LIBFT] $(RED)Removing libft.a library file..."
+	@echo "$(LGRAY)[LIBFT] $(RED)Removing libft.a library file...$(NC)"
 	@/bin/rm -f $(NAME)
 
 re: fclean all
