@@ -155,7 +155,7 @@ command_t think(agent_info_t info)
 						};
 					}
 				}
-				else
+				if (info.row > (NUM_ROWS / 2))
 				{
 					esc_dir = is_cell_wax_city(info, N);
 					if (esc_dir == N)
@@ -172,6 +172,26 @@ command_t think(agent_info_t info)
 						return (command_t) {
 							.action = MOVE,
 							.direction = S
+						};
+					}
+				}
+				if (info.row == (NUM_ROWS / 2))
+				{
+					esc_dir = is_cell_wax_city(info, S);
+					if (esc_dir == S)
+						esc_dir = is_cell_wax_city(info, N);
+					if (esc_dir == N)
+					{
+						return (command_t) {
+							.action = GUARD,
+							.direction = N
+						};
+					}
+					else
+					{
+						return (command_t) {
+							.action = MOVE,
+							.direction = N
 						};
 					}
 				}
