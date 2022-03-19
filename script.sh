@@ -14,7 +14,7 @@ make -C $2
 team1=$(basename $1)
 team2=$(basename $2)
 
-teamname1="Spy_smart"
+teamname1="Builders_sun"
 teamname2="Builders_smart"
 port=8000
 
