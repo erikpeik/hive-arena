@@ -6,7 +6,7 @@ command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	hive_dir, flower_dir, cloud_dir, enemy_dir, esc_dir, temp, temp_action;
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, esc_dir, temp = -1, temp_action;
 	coords_t hive_loc;
 	command_t	catcher;
 
@@ -50,20 +50,20 @@ command_t think(agent_info_t info)
 		}
 		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
-		hive_dir = is_cell(info, hive_dir, EMPTY, 1);
-		if (hive_dir >= 0)
+		temp = is_cell(info, hive_dir, EMPTY, 1);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = MOVE,
-				.direction = hive_dir
+				.direction = temp
 			};
 		}
-		hive_dir = is_cell(info, hive_dir, WALL, 1);
-		if (hive_dir >= 0)
+		temp = is_cell(info, hive_dir, WALL, 1);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = GUARD,		//<--- NEVER GOES HERE, NEVER
-				.direction = hive_dir
+				.direction = temp
 			};
 		}
 		/* Move random direction */
@@ -98,7 +98,7 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* ESCAPE FROM WAX CITY */
-/*		if ((info.col == 0) || (info.col == 29))
+		if ((info.col == 0) || (info.col == 29))
 		{
 			if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
 			{
@@ -175,24 +175,24 @@ command_t think(agent_info_t info)
 					}
 				}
 			}
-		}		*/
+		}
 		/* Look for a flower in view distance */
 		flower_dir = find_distant(info, FLOWER, targets);
 		if (flower_dir >= 0)
-			flower_dir = is_cell(info, flower_dir, EMPTY, 1);
-		if (flower_dir >= 0)
+			temp = is_cell(info, flower_dir, EMPTY, 2);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = MOVE,
-				.direction = flower_dir
+				.direction = temp
 			};
 		}
-		flower_dir = is_cell(info, flower_dir, WALL, 1);
-		if (flower_dir >= 0)
+		temp = is_cell(info, flower_dir, WALL, 1);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = GUARD,
-				.direction = flower_dir
+				.direction = temp
 			};
 		}
 		/* Are there enemies with flowers nearby */
@@ -221,39 +221,39 @@ command_t think(agent_info_t info)
 		/* Looking flowers in map */
 		flower_dir = open_map(arr, info, FLOWER, targets);
 		if (flower_dir >= 0)
-			flower_dir = is_cell(info, flower_dir, EMPTY, 1);
-		if (flower_dir >= 0)
+			temp = is_cell(info, flower_dir, EMPTY, 2);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = MOVE,
-				.direction = flower_dir
+				.direction = temp
 			};
 		}
-		flower_dir = is_cell(info, flower_dir, WALL, 1);
-		if (flower_dir >= 0)
+		temp = is_cell(info, flower_dir, WALL, 1);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = GUARD,
-				.direction = flower_dir
+				.direction = temp
 			};
 		}
 		/* Looking not visited places in map */
 		cloud_dir = open_map(arr, info, -1, targets);
 		if (cloud_dir >= 0)
-			cloud_dir = is_cell(info, cloud_dir, EMPTY, 1);
-		if (cloud_dir >= 0)
+			temp = is_cell(info, cloud_dir, EMPTY, 2);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = MOVE,
-				.direction = cloud_dir
+				.direction = temp
 			};
 		}
-		cloud_dir = is_cell(info, cloud_dir, WALL, 1);
-		if (cloud_dir >= 0)
+		temp = is_cell(info, cloud_dir, WALL, 1);
+		if (temp >= 0)
 		{
 			return (command_t) {
 				.action = GUARD,
-				.direction = cloud_dir
+				.direction = temp
 			};
 		}
 		/* Are there enemies with flowers that we can see */
@@ -261,20 +261,20 @@ command_t think(agent_info_t info)
 		{
 			enemy_dir = find_distant(info, BEE_1_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
-				enemy_dir = is_cell(info, enemy_dir, EMPTY, 2);
-			if (enemy_dir >= 0)
+				temp = is_cell(info, enemy_dir, EMPTY, 2);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = MOVE,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
-			enemy_dir = is_cell(info, enemy_dir, WALL, 1);
-			if (enemy_dir >= 0)
+			temp = is_cell(info, enemy_dir, WALL, 1);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = GUARD,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
 		}
@@ -282,20 +282,20 @@ command_t think(agent_info_t info)
 		{
 			enemy_dir = find_distant(info, BEE_0_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
-				enemy_dir = is_cell(info, enemy_dir, EMPTY, 2);
-			if (enemy_dir >= 0)
+				temp = is_cell(info, enemy_dir, EMPTY, 2);
+			if (temp  >= 0)
 			{
 				return (command_t) {
 					.action = MOVE,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
-			enemy_dir = is_cell(info, enemy_dir, WALL, 1);
-			if (enemy_dir >= 0)
+			temp = is_cell(info, enemy_dir, WALL, 1);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = GUARD,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
 		}
@@ -304,20 +304,20 @@ command_t think(agent_info_t info)
 		{
 			enemy_dir = open_map(arr, info, BEE_1_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
-				enemy_dir = is_cell(info, enemy_dir, EMPTY, 2);
-			if (enemy_dir >= 0)
+				temp = is_cell(info, enemy_dir, EMPTY, 2);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = MOVE,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
-			enemy_dir = is_cell(info, enemy_dir, WALL, 1);
-			if (enemy_dir >= 0)
+			temp = is_cell(info, enemy_dir, WALL, 1);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = GUARD,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
 		}
@@ -325,20 +325,20 @@ command_t think(agent_info_t info)
 		{
 			enemy_dir = open_map(arr, info, BEE_0_WITH_FLOWER, targets);
 			if (enemy_dir >= 0)
-				enemy_dir = is_cell(info, enemy_dir, EMPTY, 2);
-			if (enemy_dir >= 0)
+				temp = is_cell(info, enemy_dir, EMPTY, 2);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = MOVE,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
-			enemy_dir = is_cell(info, enemy_dir, WALL, 1);
-			if (enemy_dir >= 0)
+			temp = is_cell(info, enemy_dir, WALL, 1);
+			if (temp >= 0)
 			{
 				return (command_t) {
 					.action = GUARD,
-					.direction = enemy_dir
+					.direction = temp
 				};
 			}
 		}
