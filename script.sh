@@ -15,7 +15,7 @@ team1=$(basename $1)
 team2=$(basename $2)
 
 teamname1="Eerikin Pippuri Kebab"
-teamname2="testdumb"
+teamname2="EPK_smart"
 port=8000
 
 count1=0
