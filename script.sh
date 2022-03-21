@@ -14,8 +14,8 @@ make -C $2
 team1=$(basename $1)
 team2=$(basename $2)
 
-teamname1="Limited"
-teamname2="Builders_sun"
+teamname1="Eerikin Pippuri Kebab"
+teamname2="testdumb"
 port=8000
 
 count1=0
@@ -37,12 +37,12 @@ do
 	isodate=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 	logfile="${team1}-${team2}-log-$c.log"
 
-	(sleep 0.5 ; cd $1 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p0] /' ) & > /dev/null 2>&1
-	(sleep 0.5 ; cd $2 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p1] /' ) & > /dev/null 2>&1
+	(sleep 0.3 ; cd $1 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p0] /' ) & > /dev/null 2>&1
+	(sleep 0.3 ; cd $2 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p1] /' ) & > /dev/null 2>&1
 
 	bin/arena $port $logfile > /dev/null 2>&1
 	winner=$(cat $logfile | grep "# Winner:" | cut -d "(" -f 2 | cut -d ")" -f 1)
-	if [ "$(cat $logfile | grep "# Player 0:" | cut -d " " -f 4-)" == $teamname1 ]; then
+	if [ "$(cat $logfile | grep "# Player 0:" | cut -d " " -f 4-)" == "$teamname1" ]; then
 		score1=$(tail -n2 $logfile | head -n1 | cut -d "," -f 4)
 		score2=$(tail -n2 $logfile | head -n1 | cut -d "," -f 5)
 	else
