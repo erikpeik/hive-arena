@@ -2,7 +2,7 @@
 
 coords_t	circle_around(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, int offset)
 {
-	if (info.row - offset > 0)
+	if (info.row - offset >= 0)
 	{
 		for (int i = -offset; i < offset; i++)
 		{
@@ -41,7 +41,7 @@ coords_t	circle_around(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type,
 			}
 		}
 	}
-	if (info.col - offset > 0)
+	if (info.col - offset >= 0)
 	{
 		for (int i = offset; i > -offset; i--)
 		{
