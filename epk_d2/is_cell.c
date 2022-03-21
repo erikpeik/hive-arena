@@ -11,7 +11,7 @@ static const coords_t offsets[] = {
 	{-1,-1}
 };
 
-int	is_cell(agent_info_t info, int dir, int type, int max)
+int	is_cell(agent_info_t info, int dir, cell_t type, int max)
 {
 	int ofs = 1;
 	int temp;

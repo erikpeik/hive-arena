@@ -21,6 +21,7 @@ int			open_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, coords_
 int			is_cell_free(agent_info_t info, int dir);
 int			is_cell_wax(agent_info_t info, int dir);
 int			is_cell_wax_city(agent_info_t info, int dir);
+int			is_cell(agent_info_t info, int dir, cell_t type, int max);
 coords_t	circle_around(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, int offset);
 command_t	builder_bees(agent_info_t info,  coords_t hive_loc);
 command_t	build_direction(agent_info_t info);
