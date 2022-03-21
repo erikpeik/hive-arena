@@ -43,7 +43,6 @@ command_t think(agent_info_t info)
 		}
 		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
-		temp = hive_dir;
 		if((abs(hive_loc.row - info.row) <= 3) && (abs(hive_loc.col - info.col) <= 3))
 		{
 			hive_dir = is_cell_wax(info, hive_dir);
@@ -77,6 +76,7 @@ command_t think(agent_info_t info)
 		}
 		else
 		{
+			temp = hive_dir;
 			hive_dir = is_cell_free(info, hive_dir);
 			if (hive_dir >= 0)
 				{
