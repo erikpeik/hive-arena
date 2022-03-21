@@ -131,9 +131,9 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* ESCAPE FROM WAX CITY */
-		if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
+		if ((info.col == 0) || (info.col == 29))
 		{
-			if ((info.col == 0) || (info.col == 29))
+			if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
 			{
 				if (info.row < (NUM_ROWS / 2))
 				{
