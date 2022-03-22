@@ -135,7 +135,7 @@ command_t think(agent_info_t info)
 		{
 			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
 			{
-				if (info.row < (NUM_ROWS / 2))
+				if (info.row <= (NUM_ROWS / 2))
 				{
 					esc_dir = is_cell_wax_city(info, N);
 					if (esc_dir == N)
@@ -177,7 +177,7 @@ command_t think(agent_info_t info)
 						}
 					}
 				}
-				if (info.row >= (NUM_ROWS / 2))
+				if (info.row > (NUM_ROWS / 2))
 				{
 					esc_dir = is_cell_wax_city(info, S);
 					if (esc_dir == S)
