@@ -50,7 +50,7 @@ command_t think(agent_info_t info)
 		}
 		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
-		if((abs(hive_loc.row - info.row) <= 3) && (abs(hive_loc.col - info.col) <= 3))
+		if((abs(hive_loc.row - info.row) <= 4) && (abs(hive_loc.col - info.col) <= 4)) //
 		{
 			hive_dir = is_cell_wax(info, hive_dir);
 			if (hive_dir >= 0)
@@ -133,13 +133,11 @@ command_t think(agent_info_t info)
 		/* ESCAPE FROM WAX CITY */
 		if ((info.col == 0) || (info.col == 29))
 		{
-			if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
+			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
 			{
 				if (info.row < (NUM_ROWS / 2))
 				{
-					esc_dir = is_cell_wax_city(info, S);
-					if (esc_dir == S)
-						esc_dir = is_cell_wax_city(info, N);
+					esc_dir = is_cell_wax_city(info, N);
 					if (esc_dir == N)
 					{
 						return (command_t) {
@@ -149,7 +147,7 @@ command_t think(agent_info_t info)
 					}
 					else
 					{
-						esc_dir = is_cell_free(info, N);
+						esc_dir = is_cell_wax(info, N);
 						if (esc_dir >= 0)
 						{
 							return (command_t) {
@@ -157,13 +155,31 @@ command_t think(agent_info_t info)
 								.direction = esc_dir
 							};
 						}
+						/* Breaking the WALL */
+						if (esc_dir < 0)
+						{
+							if (esc_dir == -11)
+							{
+								/* Move random direction */
+								return (command_t) {
+									.action = MOVE,
+									.direction = rand() % 8
+								};
+							}
+							if (esc_dir == -10)
+								esc_dir = 0;
+							else
+								esc_dir = esc_dir * -1;
+							return (command_t) {
+								.action = GUARD,
+								.direction = esc_dir
+							};
+						}
 					}
 				}
-				if (info.row > (NUM_ROWS / 2))
+				if (info.row >= (NUM_ROWS / 2))
 				{
-					esc_dir = is_cell_wax_city(info, N);
-					if (esc_dir == N)
-						esc_dir = is_cell_wax_city(info, S);
+					esc_dir = is_cell_wax_city(info, S);
 					if (esc_dir == S)
 					{
 						return (command_t) {
@@ -173,7 +189,7 @@ command_t think(agent_info_t info)
 					}
 					else
 					{
-						esc_dir = is_cell_free(info, S);
+						esc_dir = is_cell_wax(info, S);
 						if (esc_dir >= 0)
 						{
 							return (command_t) {
@@ -181,27 +197,23 @@ command_t think(agent_info_t info)
 								.direction = esc_dir
 							};
 						}
-					}
-				}
-				if (info.row == (NUM_ROWS / 2))
-				{
-					esc_dir = is_cell_wax_city(info, S);
-					if (esc_dir == S)
-						esc_dir = is_cell_wax_city(info, N);
-					if (esc_dir == N)
-					{
-						return (command_t) {
-							.action = GUARD,
-							.direction = N
-						};
-					}
-					else
-					{
-						esc_dir = is_cell_free(info, N);
-						if (esc_dir >= 0)
+						/* Breaking the WALL */
+						if (esc_dir < 0)
 						{
+							if (esc_dir == -11)
+							{
+								/* Move random direction */
+								return (command_t) {
+									.action = MOVE,
+									.direction = rand() % 8
+								};
+							}
+							if (esc_dir == -10)
+								esc_dir = 0;
+							else
+								esc_dir = esc_dir * -1;
 							return (command_t) {
-								.action = MOVE,
+								.action = GUARD,
 								.direction = esc_dir
 							};
 						}
