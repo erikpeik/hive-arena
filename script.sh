@@ -14,8 +14,8 @@ make -C $2
 team1=$(basename $1)
 team2=$(basename $2)
 
-teamname1="Triangle V2"
-teamname2="Eerikin Pippuri Kebab"
+teamname1="Eerikin Pippuri Kebab"
+teamname2="Dumble"
 port=8000
 
 count1=0

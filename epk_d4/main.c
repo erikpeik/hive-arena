@@ -31,17 +31,12 @@ command_t think(agent_info_t info)
 	/* Locate home HIVE */
 	locate_hive(info.player, &hive_loc);
 
-	/* SPY LOCATION */
+/*	SPY LOCATION
 	if (info.bee == 0 || info.bee == 4)
 	{
 		catcher = builder_bees(info, hive_loc);
 		return (catcher);
-	}
-	if (info.bee == 2)
-	{
-		catcher = linker(info, hive_loc);
-		return (catcher);
-	}
+	}	*/
 	if (is_bee_with_flower(bee))
 	{
 		/* DROP flower in HIVE */
@@ -138,7 +133,7 @@ command_t think(agent_info_t info)
 		/* ESCAPE FROM WAX CITY */
 		if ((info.col == 0) || (info.col == 29))
 		{
-			if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
+			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
 			{
 				if (info.row <= (NUM_ROWS / 2))
 				{
@@ -285,30 +280,12 @@ command_t think(agent_info_t info)
 		}
 		/* Breaking the WALL */
 		if (flower_dir == -2)
+		{
 			return (command_t) {
 				.action = GUARD,
 				.direction = temp
-		};
-		/* Looking not visited places in map */
-		cloud_dir = open_map(arr, info, -1, targets);
-		if (cloud_dir >= 0)
-		{
-			temp = cloud_dir;
-			cloud_dir = is_cell_free(info, cloud_dir);
-		}
-		if (cloud_dir >= 0)
-		{
-			return (command_t) {
-				.action = MOVE,
-				.direction = cloud_dir
 			};
 		}
-		/* Breaking the WALL */
-		if (cloud_dir == -2)
-			return (command_t) {
-				.action = GUARD,
-				.direction = temp
-		};
 		/* Are there enemies with flowers that we can see */
 		if (info.player == 0)
 		{
@@ -354,6 +331,26 @@ command_t think(agent_info_t info)
 					.direction = temp
 			};
 		}
+		/* Looking not visited places in map */
+		cloud_dir = open_map(arr, info, -1, targets);
+		if (cloud_dir >= 0)
+		{
+			temp = cloud_dir;
+			cloud_dir = is_cell_free(info, cloud_dir);
+		}
+		if (cloud_dir >= 0)
+		{
+			return (command_t) {
+				.action = MOVE,
+				.direction = cloud_dir
+			};
+		}
+		/* Breaking the WALL */
+		if (cloud_dir == -2)
+			return (command_t) {
+				.action = GUARD,
+				.direction = temp
+		};
 		/* Look for enemies with flower(s) from MAP */
 		if (info.player == 0)
 		{

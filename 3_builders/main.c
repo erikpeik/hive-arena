@@ -398,7 +398,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "testdumb";
+	char *team_name = "Dumble";
 
 	agent_main(host, port, team_name, think);
 }
