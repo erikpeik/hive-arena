@@ -132,7 +132,7 @@ int	find_distant(agent_info_t info, cell_t type, coords_t targets[5])
 		if (distant == type)
 			return (dir/3);
 	}
-	return (-1);
+	return (-11);
 }
 
 int find_neighbour(agent_info_t info, cell_t type)
@@ -148,5 +148,5 @@ int find_neighbour(agent_info_t info, cell_t type)
 			return dir;
 		}
 	}
-	return -1;
+	return (-11);
 }

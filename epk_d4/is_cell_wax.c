@@ -19,13 +19,6 @@ int	is_cell_wax(agent_info_t info, int dir)
 	cell_t cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 	if (cell_info == EMPTY)
 		return (dir);
-	if (cell_info == WALL)
-	{
-		if (dir == 0)
-			return (-10);
-		else
-			return (-dir);
-	}
 	while (ofs <= 1)
 	{
 		temp = dir;
@@ -35,6 +28,33 @@ int	is_cell_wax(agent_info_t info, int dir)
 		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 		if (cell_info == EMPTY)
 			return (temp + ofs);
+		temp = dir;
+		if (dir - ofs < 0)
+			temp = 8;
+		offset = offsets[temp - ofs];
+		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
+		if (cell_info == EMPTY)
+			return (temp - ofs);
+		ofs++;
+	}
+
+	offset = offsets[dir];
+	cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
+	if (cell_info == WALL)
+	{
+		if (dir == 0)
+			return (-10);
+		else
+			return (-dir);
+	}
+	ofs = 1;
+	while (ofs <= 1)
+	{
+		temp = dir;
+		if (dir + ofs > 7)
+			temp = -1;
+		offset = offsets[temp + ofs];
+		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
 		if (cell_info == WALL)
 		{
 			if (temp + ofs == 0)
@@ -47,8 +67,6 @@ int	is_cell_wax(agent_info_t info, int dir)
 			temp = 8;
 		offset = offsets[temp - ofs];
 		cell_info = info.cells[VIEW_DISTANCE + offset.row][VIEW_DISTANCE + offset.col];
-		if (cell_info == EMPTY)
-			return (temp - ofs);
 		if (cell_info == WALL)
 		{
 			if (temp - ofs == 0)

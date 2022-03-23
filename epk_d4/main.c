@@ -6,9 +6,9 @@ command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	hive_dir, flower_dir, cloud_dir, enemy_dir, esc_dir, temp, temp_action;
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, temp, temp_action;
 	coords_t hive_loc;
-	command_t	catcher;
+//	command_t	catcher;
 
 
 	/* Creating the map */
@@ -31,7 +31,7 @@ command_t think(agent_info_t info)
 	/* Locate home HIVE */
 	locate_hive(info.player, &hive_loc);
 
-/*	SPY LOCATION
+/*	BUILD LOCATION
 	if (info.bee == 0 || info.bee == 4)
 	{
 		catcher = builder_bees(info, hive_loc);
@@ -48,55 +48,34 @@ command_t think(agent_info_t info)
 				.direction = hive_dir
 			};
 		}
-		/* Find direction of the HIVE */
+		/* Find direction of the HIVE  XXX*/
 		hive_dir = return_to_hive(info, hive_loc);
-		if((abs(hive_loc.row - info.row) <= 4) && (abs(hive_loc.col - info.col) <= 4)) //
-		{
-			hive_dir = is_cell_wax(info, hive_dir);
-			if (hive_dir >= 0)
-				{
-				return (command_t) {
-					.action = MOVE,
-					.direction = hive_dir
-				};
-			}
-			/* Breaking the WALL */
-			if (hive_dir < 0)
+		hive_dir = is_cell_wax(info, hive_dir);
+		if (hive_dir >= 0)
 			{
-				if (hive_dir == -11)
-				{
-					/* Move random direction */
-					return (command_t) {
-						.action = MOVE,
-						.direction = rand() % 8
-					};
-				}
-				if (hive_dir == -10)
-					hive_dir = 0;
-				else
-					hive_dir = hive_dir * -1;
-				return (command_t) {
-					.action = GUARD,
-					.direction = hive_dir
-				};
-			}
+			return (command_t) {
+				.action = MOVE,
+				.direction = hive_dir
+			};
 		}
-		else
+		/* Breaking the WALL */
+		if (hive_dir < 0)
 		{
-			temp = hive_dir;
-			hive_dir = is_cell_free(info, hive_dir);
-			if (hive_dir >= 0)
-				{
+			if (hive_dir == -11)
+			{
+				/* Move random direction */
 				return (command_t) {
 					.action = MOVE,
-					.direction = hive_dir
+					.direction = rand() % 8
 				};
 			}
-			/* Breaking the WALL */
-			if (hive_dir == -2)
-				return (command_t) {
-					.action = GUARD,
-					.direction = temp
+			if (hive_dir == -10)
+				hive_dir = 0;
+			else
+				hive_dir = hive_dir * -1;
+			return (command_t) {
+				.action = GUARD,
+				.direction = hive_dir
 			};
 		}
 		/* Move random direction */
@@ -130,194 +109,13 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
-		/* ESCAPE FROM WAX CITY */
-		if (info.player == 0 && info.col == 0)
-		{
-			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
-			{
-				if (info.row <= (NUM_ROWS / 2))
-				{
-					esc_dir = is_cell_wax_city(info, N);
-					if (esc_dir == N)
-					{
-						return (command_t) {
-							.action = GUARD,
-							.direction = N
-						};
-					}
-					else
-					{
-						esc_dir = is_cell_wax(info, N);
-						if (esc_dir >= 0)
-						{
-							return (command_t) {
-								.action = MOVE,
-								.direction = esc_dir
-							};
-						}
-						/* Breaking the WALL */
-						if (esc_dir < 0)
-						{
-							if (esc_dir == -11)
-							{
-								/* Move random direction */
-								return (command_t) {
-									.action = MOVE,
-									.direction = rand() % 8
-								};
-							}
-							if (esc_dir == -10)
-								esc_dir = 0;
-							else
-								esc_dir = esc_dir * -1;
-							return (command_t) {
-								.action = GUARD,
-								.direction = esc_dir
-							};
-						}
-					}
-				}
-				if (info.row > (NUM_ROWS / 2))
-				{
-					esc_dir = is_cell_wax_city(info, S);
-					if (esc_dir == S)
-					{
-						return (command_t) {
-							.action = GUARD,
-							.direction = S
-						};
-					}
-					else
-					{
-						esc_dir = is_cell_wax(info, S);
-						if (esc_dir >= 0)
-						{
-							return (command_t) {
-								.action = MOVE,
-								.direction = esc_dir
-							};
-						}
-						/* Breaking the WALL */
-						if (esc_dir < 0)
-						{
-							if (esc_dir == -11)
-							{
-								/* Move random direction */
-								return (command_t) {
-									.action = MOVE,
-									.direction = rand() % 8
-								};
-							}
-							if (esc_dir == -10)
-								esc_dir = 0;
-							else
-								esc_dir = esc_dir * -1;
-							return (command_t) {
-								.action = GUARD,
-								.direction = esc_dir
-							};
-						}
-					}
-				}
-			}
-		}
-		/* RIP */
-		if (info.player == 1 && info.col == 29)
-		{
-			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
-			{
-				if (info.row <= (NUM_ROWS / 2))
-				{
-					esc_dir = is_cell_wax_city(info, N);
-					if (esc_dir == N)
-					{
-						return (command_t) {
-							.action = GUARD,
-							.direction = N
-						};
-					}
-					else
-					{
-						esc_dir = is_cell_wax(info, N);
-						if (esc_dir >= 0)
-						{
-							return (command_t) {
-								.action = MOVE,
-								.direction = esc_dir
-							};
-						}
-						/* Breaking the WALL */
-						if (esc_dir < 0)
-						{
-							if (esc_dir == -11)
-							{
-								/* Move random direction */
-								return (command_t) {
-									.action = MOVE,
-									.direction = rand() % 8
-								};
-							}
-							if (esc_dir == -10)
-								esc_dir = 0;
-							else
-								esc_dir = esc_dir * -1;
-							return (command_t) {
-								.action = GUARD,
-								.direction = esc_dir
-							};
-						}
-					}
-				}
-				if (info.row > (NUM_ROWS / 2))
-				{
-					esc_dir = is_cell_wax_city(info, S);
-					if (esc_dir == S)
-					{
-						return (command_t) {
-							.action = GUARD,
-							.direction = S
-						};
-					}
-					else
-					{
-						esc_dir = is_cell_wax(info, S);
-						if (esc_dir >= 0)
-						{
-							return (command_t) {
-								.action = MOVE,
-								.direction = esc_dir
-							};
-						}
-						/* Breaking the WALL */
-						if (esc_dir < 0)
-						{
-							if (esc_dir == -11)
-							{
-								/* Move random direction */
-								return (command_t) {
-									.action = MOVE,
-									.direction = rand() % 8
-								};
-							}
-							if (esc_dir == -10)
-								esc_dir = 0;
-							else
-								esc_dir = esc_dir * -1;
-							return (command_t) {
-								.action = GUARD,
-								.direction = esc_dir
-							};
-						}
-					}
-				}
-			}
-		}
-		/* Look for a flower in view distance */
+
+		/* Look for a flower in view distance XXX */
 		flower_dir = find_distant(info, FLOWER, targets);
 		if (flower_dir >= 0)
 		{
 			temp = flower_dir;
-			flower_dir = is_cell_free(info, flower_dir);
+			flower_dir = is_cell_wax(info, flower_dir);
 		}
 		if (flower_dir >= 0)
 		{
@@ -326,12 +124,17 @@ command_t think(agent_info_t info)
 				.direction = flower_dir
 			};
 		}
-		/* Breaking the WALL */
-		if (flower_dir == -2)
+		if (flower_dir < 0 && flower_dir > -11)
+		{
+			if (flower_dir == -10)
+				flower_dir = 0;
+			else
+				flower_dir = flower_dir * -1;
 			return (command_t) {
 				.action = GUARD,
-				.direction = temp
-		};
+				.direction = flower_dir
+			};
+		}
 		/* Are there enemies with flowers nearby */
 		if (info.player == 0)
 		{
@@ -355,12 +158,12 @@ command_t think(agent_info_t info)
 				};
 			}
 		}
-		/* Looking flowers in map */
+		/* Looking flowers in map XXX */
 		flower_dir = open_map(arr, info, FLOWER, targets);
 		if (flower_dir >= 0)
 		{
 			temp = flower_dir;
-			flower_dir = is_cell_free(info, flower_dir);
+			flower_dir = is_cell_wax(info, flower_dir);
 		}
 		if (flower_dir >= 0)
 		{
@@ -370,11 +173,15 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* Breaking the WALL */
-		if (flower_dir == -2)
+		if (flower_dir < 0 && flower_dir > -11)
 		{
+			if (flower_dir == -10)
+				flower_dir = 0;
+			else
+				flower_dir = flower_dir * -1;
 			return (command_t) {
 				.action = GUARD,
-				.direction = temp
+				.direction = flower_dir
 			};
 		}
 		/* Are there enemies with flowers that we can see */
@@ -384,7 +191,7 @@ command_t think(agent_info_t info)
 			if (enemy_dir >= 0)
 			{
 				temp = enemy_dir;
-				enemy_dir = is_cell_free(info, enemy_dir);
+				enemy_dir = is_cell_wax(info, enemy_dir);
 			}
 			if (enemy_dir >= 0)
 			{
@@ -394,11 +201,17 @@ command_t think(agent_info_t info)
 				};
 			}
 			/* Breaking the WALL */
-			if (enemy_dir == -2)
+			if (enemy_dir < 0 && enemy_dir > -11)
+			{
+				if (enemy_dir == -10)
+					enemy_dir = 0;
+				else
+					enemy_dir = enemy_dir * -1;
 				return (command_t) {
 					.action = GUARD,
-					.direction = temp
-			};
+					.direction = enemy_dir
+				};
+			}
 		}
 		else
 		{
@@ -406,7 +219,7 @@ command_t think(agent_info_t info)
 			if (enemy_dir >= 0)
 			{
 				temp = enemy_dir;
-				enemy_dir = is_cell_free(info, enemy_dir);
+				enemy_dir = is_cell_wax(info, enemy_dir);
 			}
 			if (enemy_dir >= 0)
 			{
@@ -416,18 +229,24 @@ command_t think(agent_info_t info)
 				};
 			}
 			/* Breaking the WALL */
-			if (enemy_dir == -2)
+			if (enemy_dir < 0 && enemy_dir > -11)
+			{
+				if (enemy_dir == -10)
+					enemy_dir = 0;
+				else
+					enemy_dir = enemy_dir * -1;
 				return (command_t) {
 					.action = GUARD,
-					.direction = temp
-			};
+					.direction = enemy_dir
+				};
+			}
 		}
 		/* Looking not visited places in map */
 		cloud_dir = open_map(arr, info, -1, targets);
 		if (cloud_dir >= 0)
 		{
 			temp = cloud_dir;
-			cloud_dir = is_cell_free(info, cloud_dir);
+			cloud_dir = is_cell_wax(info, cloud_dir);
 		}
 		if (cloud_dir >= 0)
 		{
@@ -437,11 +256,17 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* Breaking the WALL */
-		if (cloud_dir == -2)
+		if (cloud_dir < 0 && cloud_dir > -11)
+		{
+			if (cloud_dir == -10)
+				cloud_dir = 0;
+			else
+				cloud_dir = cloud_dir * -1;
 			return (command_t) {
 				.action = GUARD,
-				.direction = temp
-		};
+				.direction = cloud_dir
+			};
+		}
 		/* Look for enemies with flower(s) from MAP */
 		if (info.player == 0)
 		{
@@ -449,7 +274,7 @@ command_t think(agent_info_t info)
 			if (enemy_dir >= 0)
 			{
 				temp = enemy_dir;
-				enemy_dir = is_cell_free(info, enemy_dir);
+				enemy_dir = is_cell_wax(info, enemy_dir);
 			}
 			if (enemy_dir >= 0)
 			{
@@ -459,11 +284,17 @@ command_t think(agent_info_t info)
 				};
 			}
 			/* Breaking the WALL */
-			if (enemy_dir == -2)
+			if (enemy_dir < 0 && enemy_dir > -11)
+			{
+				if (enemy_dir == -10)
+					enemy_dir = 0;
+				else
+					enemy_dir = enemy_dir * -1;
 				return (command_t) {
 					.action = GUARD,
-					.direction = temp
-			};
+					.direction = enemy_dir
+				};
+			}
 		}
 		else
 		{
@@ -471,7 +302,7 @@ command_t think(agent_info_t info)
 			if (enemy_dir >= 0)
 			{
 				temp = enemy_dir;
-				enemy_dir = is_cell_free(info, enemy_dir);
+				enemy_dir = is_cell_wax(info, enemy_dir);
 			}
 			if (enemy_dir >= 0)
 			{
@@ -481,11 +312,17 @@ command_t think(agent_info_t info)
 				};
 			}
 			/* Breaking the WALL */
-			if (enemy_dir == -2)
+			if (enemy_dir < 0 && enemy_dir > -11)
+			{
+				if (enemy_dir == -10)
+					enemy_dir = 0;
+				else
+					enemy_dir = enemy_dir * -1;
 				return (command_t) {
 					.action = GUARD,
-					.direction = temp
-			};
+					.direction = enemy_dir
+				};
+			}
 		}
 		return (command_t) {
 			.action = MOVE,

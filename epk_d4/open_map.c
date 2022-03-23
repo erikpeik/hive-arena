@@ -43,7 +43,7 @@ int	open_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, coords_t 
 			{
 				i = 0;
 				while (i < 5)
-				{	
+				{
 					if (targets[i].row == target.row && targets[i].col == target.col)
 					{
 						is_targeted = 1;
@@ -68,5 +68,5 @@ int	open_map(int arr[NUM_ROWS][NUM_COLS], agent_info_t info, int type, coords_t 
 		}
 		min++;
 	}
-	return (-1);
+	return (-11);
 }
