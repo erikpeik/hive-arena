@@ -131,7 +131,98 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* ESCAPE FROM WAX CITY */
-		if ((info.col == 0) || (info.col == 29))
+		if (info.player == 0 && info.col == 0)
+		{
+			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
+			{
+				if (info.row <= (NUM_ROWS / 2))
+				{
+					esc_dir = is_cell_wax_city(info, N);
+					if (esc_dir == N)
+					{
+						return (command_t) {
+							.action = GUARD,
+							.direction = N
+						};
+					}
+					else
+					{
+						esc_dir = is_cell_wax(info, N);
+						if (esc_dir >= 0)
+						{
+							return (command_t) {
+								.action = MOVE,
+								.direction = esc_dir
+							};
+						}
+						/* Breaking the WALL */
+						if (esc_dir < 0)
+						{
+							if (esc_dir == -11)
+							{
+								/* Move random direction */
+								return (command_t) {
+									.action = MOVE,
+									.direction = rand() % 8
+								};
+							}
+							if (esc_dir == -10)
+								esc_dir = 0;
+							else
+								esc_dir = esc_dir * -1;
+							return (command_t) {
+								.action = GUARD,
+								.direction = esc_dir
+							};
+						}
+					}
+				}
+				if (info.row > (NUM_ROWS / 2))
+				{
+					esc_dir = is_cell_wax_city(info, S);
+					if (esc_dir == S)
+					{
+						return (command_t) {
+							.action = GUARD,
+							.direction = S
+						};
+					}
+					else
+					{
+						esc_dir = is_cell_wax(info, S);
+						if (esc_dir >= 0)
+						{
+							return (command_t) {
+								.action = MOVE,
+								.direction = esc_dir
+							};
+						}
+						/* Breaking the WALL */
+						if (esc_dir < 0)
+						{
+							if (esc_dir == -11)
+							{
+								/* Move random direction */
+								return (command_t) {
+									.action = MOVE,
+									.direction = rand() % 8
+								};
+							}
+							if (esc_dir == -10)
+								esc_dir = 0;
+							else
+								esc_dir = esc_dir * -1;
+							return (command_t) {
+								.action = GUARD,
+								.direction = esc_dir
+							};
+						}
+					}
+				}
+			}
+		}
+		/* RIP */
+		if (info.player == 1 && info.col == 29)
 		{
 			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
 			{
