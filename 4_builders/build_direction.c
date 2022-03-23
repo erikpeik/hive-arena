@@ -8,6 +8,7 @@ static const dir_t north_west[] = {
 	SE,
 	E,
 	NE,
+	N
 };
 
 static const dir_t south_west[] = {
@@ -17,7 +18,8 @@ static const dir_t south_west[] = {
 	N,
 	NE,
 	E,
-	SE
+	SE,
+	S
 };
 
 static const dir_t north_east[] = {
@@ -27,7 +29,8 @@ static const dir_t north_east[] = {
 	S,
 	SW,
 	W,
-	NW
+	NW,
+	N
 };
 
 static const dir_t south_east[] = {
@@ -37,7 +40,8 @@ static const dir_t south_east[] = {
 	N,
 	NW,
 	W,
-	SW
+	SW,
+	S
 };
 
 static const dir_t bee2_enemy0[] = {
@@ -102,7 +106,7 @@ command_t	build_direction(agent_info_t info)
 		{
 			return (command_t) {
 				.action = BUILD,
-				.direction = compass(info, south_west, 7)
+				.direction = compass(info, south_west, 8)
 			};
 		}
 		else if (info.bee == 1)
@@ -123,7 +127,7 @@ command_t	build_direction(agent_info_t info)
 		{
 			return (command_t) {
 				.action = BUILD,
-				.direction = compass(info, north_west, 7)
+				.direction = compass(info, north_west, 8)
 			};
 		}
 	}
