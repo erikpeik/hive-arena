@@ -15,7 +15,7 @@ team1=$(basename $1)
 team2=$(basename $2)
 
 teamname1="Eerikin Pippuri Kebab"
-teamname2="Dumble"
+teamname2="Pekka"
 port=8000
 
 count1=0
@@ -37,8 +37,8 @@ do
 	isodate=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 	logfile="${team1}-${team2}-log-$c.log"
 
-	(sleep 0.3 ; cd $1 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p0] /' ) & > /dev/null 2>&1
-	(sleep 0.3 ; cd $2 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p1] /' ) & > /dev/null 2>&1
+	(sleep 0.6 ; cd $1 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p0] /' ) & > /dev/null 2>&1
+	(sleep 0.6 ; cd $2 ; ./agent 127.0.0.1 $port | sed -e 's/^/[p1] /' ) & > /dev/null 2>&1
 
 	bin/arena $port $logfile > /dev/null 2>&1
 	winner=$(cat $logfile | grep "# Winner:" | cut -d "(" -f 2 | cut -d ")" -f 1)
