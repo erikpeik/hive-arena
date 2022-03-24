@@ -1,25 +1,25 @@
 #include "agent_pippuri.h"
 
-command_t	spy_moves(agent_info_t info)
+command_t	move_up_down(agent_info_t info)
 {
-	coords_t	move_here;
-	int dir;
+	coords_t move;
+	int	dir;
 
-	if (info.bee == 1)
-		move_here.row = 3;
-	if (info.bee == 3)
-		move_here.row = 21;
-	if (info.player == 0)
-		move_here.col= (NUM_COLS / 2) + 2;
+	if (info.bee == 0)
+		move.row = 4;
 	else
-		move_here.col = (NUM_COLS / 2) - 2;
-	if (toggle_bee1 == 1 && info.bee == 1)
+		move.row = 20;
+	if (info.player == 0)
+		move.col = 3;
+	else
+		move.col = 26;
+	if (toggle_bee0 == 1 && info.bee == 0)
 	{
-		if (info.col == move_here.col)
-			toggle_bee1 = 0;
+		if (info.row == move.row)
+			toggle_bee0 = 0;
 		else
 		{
-			dir = return_to_hive(info, move_here);
+			dir = return_to_hive(info, move);
 			if (dir >= 0)
 				dir = is_cell_wax(info, dir);
 			if (dir >= 0)
@@ -42,13 +42,13 @@ command_t	spy_moves(agent_info_t info)
 			}
 		}
 	}
-	if (toggle_bee3 == 1 && info.bee == 3)
+	if (toggle_bee4 == 1 && info.bee == 4)
 	{
-		if (info.col == move_here.col)
-			toggle_bee3 = 0;
+		if (info.row == move.row)
+			toggle_bee4 = 0;
 		else
 		{
-			dir = return_to_hive(info, move_here);
+			dir = return_to_hive(info, move);
 			if (dir >= 0)
 				dir = is_cell_wax(info, dir);
 			if (dir >= 0)
@@ -70,6 +70,20 @@ command_t	spy_moves(agent_info_t info)
 				};
 			}
 		}
+	}
+	if (toggle_bee0 == 0 && info.bee == 0)
+	{
+		return (command_t) {
+			.action = MOVE,
+			.direction = N
+		};
+	}
+	if (toggle_bee4 == 0 && info.bee == 4)
+	{
+		return (command_t) {
+			.action = MOVE,
+			.direction = S
+		};
 	}
 	return (command_t) {
 		.action = MOVE,
