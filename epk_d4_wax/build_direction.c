@@ -7,8 +7,7 @@ static const dir_t north_west[] = {
 	S,
 	SE,
 	E,
-	NE,
-	N
+	NE
 };
 
 static const dir_t south_west[] = {
@@ -18,8 +17,7 @@ static const dir_t south_west[] = {
 	N,
 	NE,
 	E,
-	SE,
-	S
+	SE
 };
 
 static const dir_t north_east[] = {
@@ -29,8 +27,7 @@ static const dir_t north_east[] = {
 	S,
 	SW,
 	W,
-	NW,
-	N
+	NW
 };
 
 static const dir_t south_east[] = {
@@ -40,30 +37,7 @@ static const dir_t south_east[] = {
 	N,
 	NW,
 	W,
-	SW,
-	S
-};
-
-static const dir_t bee2_enemy0[] = {
-	W,
-	NW,
-	SW,
-	N,
-	S,
-	NE,
-	SE,
-	E
-};
-
-static const dir_t bee2_enemy1[] = {
-	E,
-	SE,
-	NE,
-	S,
-	N,
-	SW,
-	NW,
-	W
+	SW
 };
 
 static const coords_t offsets[] = {
@@ -87,9 +61,9 @@ int is_free(agent_info_t info, int dir)
 
 }
 
-static dir_t	compass(agent_info_t info, const dir_t directions[], int range)
+static dir_t	compass(agent_info_t info, const dir_t directions[])
 {
-	for (int i = 0; i < range; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		if (is_free(info, directions[i]) >= 0)
 			return (directions[i]);
@@ -106,60 +80,31 @@ command_t	build_direction(agent_info_t info)
 		{
 			return (command_t) {
 				.action = BUILD,
-				.direction = compass(info, south_west, 8)
-			};
-		}
-		else if (info.bee == 1)
-		{
-			return (command_t) {
-				.action = BUILD,
-				.direction = compass(info, bee2_enemy0, 8)
-			};
-		}
-		else if (info.bee == 3)
-		{
-			return (command_t) {
-				.action = BUILD,
-				.direction = compass(info, bee2_enemy0, 8)
+				.direction = compass(info, south_west)
 			};
 		}
 		else 		// NW
 		{
 			return (command_t) {
 				.action = BUILD,
-				.direction = compass(info, north_west, 8)
+				.direction = compass(info, north_west)
 			};
 		}
 	}
-
 	else
 	{
 		if (info.bee == 0) // SE
 		{
 			return (command_t) {
 				.action = BUILD,
-				.direction = compass(info, south_east, 7)
-			};
-		}
-		else if (info.bee == 1)
-		{
-			return (command_t) {
-				.action = BUILD,
-				.direction = compass(info, bee2_enemy1, 8)
-			};
-		}
-		else if (info.bee == 1)
-		{
-			return (command_t) {
-				.action = BUILD,
-				.direction = compass(info, bee2_enemy1, 8)
+				.direction = compass(info, south_east)
 			};
 		}
 		else				// NE
 		{
 			return (command_t) {
 				.action = BUILD,
-				.direction = compass(info, north_east, 7)
+				.direction = compass(info, north_east)
 			};
 		}
 	}

@@ -1,0 +1,6 @@
+*.o
+agent
+map_log
+libft/*.o
+libft/*.a
+

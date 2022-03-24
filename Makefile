@@ -1,5 +1,5 @@
 NAME=agent
-PLAYER=builders_smart_unstuck
+PLAYER=epk_d4
 
 all: $(NAME)
 
