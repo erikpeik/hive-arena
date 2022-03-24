@@ -45,8 +45,16 @@ command_t think(agent_info_t info)
 	if (is_bee_with_flower(bee))
 	{
 		/* DROP flower in HIVE */
-		hive_dir = find_neighbour(info, hive_cell(info.player));
+/*		hive_dir = find_neighbour(info, hive_cell(info.player));
 		if (hive_dir >= 0)
+		{
+			return (command_t) {
+				.action = FORAGE,
+				.direction = hive_dir
+			};
+		} */
+		hive_dir = return_to_hive(info, hive_loc);
+		if (abs(info.row - hive_loc.row) <= 1 && abs(info.col - hive_loc.col) <= 1)
 		{
 			return (command_t) {
 				.action = FORAGE,
