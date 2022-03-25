@@ -7,5 +7,6 @@ Run `./match.sh [agent_directory] [agent_directory]` to play single match.
 
 If you want run multiple matches and get more data 
 - run `./script.sh [agent_directory] [agent_directory] [how_many_rounds]`
+  - Inside script.sh you have to change teamnames to match
 
 ![ezgif-1-d2778e9b52](https://user-images.githubusercontent.com/52178013/160117925-546cb4bf-2d51-4745-ae5f-18e63faa22e4.gif)
