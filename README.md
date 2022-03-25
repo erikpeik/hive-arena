@@ -3,7 +3,7 @@
 ## Hive Arena is friendly AI competition for Hive students. Link to [Original Repo](https://github.com/hivehelsinki/hive-arena)
 # **How to use:**
 Run `./match.sh [agent_directory] [agent_directory]` to play single match.
-- Our best agents are `epk_fin_2`, `epk_d4` & `builders_smart_unstuck`
+- Our best agents are `epk_fin_2`(finals), `epk_d4`(day 4) & `builders_smart_unstuck` (days 1-3)
 
 If you want run multiple matches and get more data 
 - run `./script.sh [agent_directory] [agent_directory] [how_many_rounds]`
