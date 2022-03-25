@@ -32,7 +32,7 @@ command_t think(agent_info_t info)
 	locate_hive(info.player, &hive_loc);
 
 	/* SPY LOCATION */
-	if (info.bee == 0 || info.bee == 4 || info.bee == 2)
+	if (info.bee == 0 || info.bee == 4 || info.bee == 1 || info.bee == 3)
 	{
 		catcher = builder_bees(info, hive_loc);
 		return (catcher);
@@ -398,7 +398,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "13";
+	char *team_name = "thinkemoji_d3";
 
 	agent_main(host, port, team_name, think);
 }

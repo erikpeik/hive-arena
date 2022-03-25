@@ -384,7 +384,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "Think";
+	char *team_name = "thinkemoji_d4";
 
 	agent_main(host, port, team_name, think);
 }

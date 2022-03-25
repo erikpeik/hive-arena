@@ -1,21 +1,15 @@
 #include "agent_pippuri.h"
 
-int arvo = 1;
+ // int fd;
 
 command_t think(agent_info_t info)
 {
 	static int	arr[NUM_ROWS][NUM_COLS];
 	static coords_t	targets[5];
-	int	hive_dir, flower_dir, cloud_dir, enemy_dir, esc_dir, temp, temp_action, dir;
+	int	hive_dir, flower_dir, cloud_dir, enemy_dir, esc_dir, temp, temp_action;
 	coords_t hive_loc;
 	command_t	catcher;
-	coords_t	nurkka;
 
-	if (info.player == 0)
-		nurkka.col = 3;
-	else
-		nurkka.col = 26;
-	nurkka.row = 21;
 
 	/* Creating the map */
 	if (info.turn == 0 || info.turn == 1)
@@ -38,28 +32,10 @@ command_t think(agent_info_t info)
 	locate_hive(info.player, &hive_loc);
 
 	/* SPY LOCATION */
-	if (info.bee == 0 || info.bee == 4)
+	if (info.bee == 0 || info.bee == 4 || info.bee == 2)
 	{
 		catcher = builder_bees(info, hive_loc);
 		return (catcher);
-	}
-	if (arvo == 1 && info.bee == 3)
-	{
-		if (info.row == nurkka.row)
-			arvo = 0;
-		else
-		{
-			dir = return_to_hive(info, nurkka);
-			dir = is_cell_free(info, dir);
-			if (dir >= 0)
-				{
-				return (command_t) {
-					.action = MOVE,
-					.direction = dir
-				};
-			}
-		}
-
 	}
 	if (is_bee_with_flower(bee))
 	{
@@ -74,7 +50,7 @@ command_t think(agent_info_t info)
 		}
 		/* Find direction of the HIVE */
 		hive_dir = return_to_hive(info, hive_loc);
-		if((abs(hive_loc.row - info.row) <= 4) && (abs(hive_loc.col - info.col) <= 4)) //
+		if((abs(hive_loc.row - info.row) <= 3) && (abs(hive_loc.col - info.col) <= 3))
 		{
 			hive_dir = is_cell_wax(info, hive_dir);
 			if (hive_dir >= 0)
@@ -155,13 +131,15 @@ command_t think(agent_info_t info)
 			};
 		}
 		/* ESCAPE FROM WAX CITY */
-		if ((info.col == 0) || (info.col == 29))
+		if (abs(hive_loc.row - info.row) < 3) //<- 2 never works!
 		{
-			if (abs(hive_loc.row - info.row) < 4) //<- 2 never works!
+			if ((info.col == 0) || (info.col == 29))
 			{
-				if (info.row <= (NUM_ROWS / 2))
+				if (info.row < (NUM_ROWS / 2))
 				{
-					esc_dir = is_cell_wax_city(info, N);
+					esc_dir = is_cell_wax_city(info, S);
+					if (esc_dir == S)
+						esc_dir = is_cell_wax_city(info, N);
 					if (esc_dir == N)
 					{
 						return (command_t) {
@@ -171,7 +149,7 @@ command_t think(agent_info_t info)
 					}
 					else
 					{
-						esc_dir = is_cell_wax(info, N);
+						esc_dir = is_cell_free(info, N);
 						if (esc_dir >= 0)
 						{
 							return (command_t) {
@@ -179,31 +157,13 @@ command_t think(agent_info_t info)
 								.direction = esc_dir
 							};
 						}
-						/* Breaking the WALL */
-						if (esc_dir < 0)
-						{
-							if (esc_dir == -11)
-							{
-								/* Move random direction */
-								return (command_t) {
-									.action = MOVE,
-									.direction = rand() % 8
-								};
-							}
-							if (esc_dir == -10)
-								esc_dir = 0;
-							else
-								esc_dir = esc_dir * -1;
-							return (command_t) {
-								.action = GUARD,
-								.direction = esc_dir
-							};
-						}
 					}
 				}
 				if (info.row > (NUM_ROWS / 2))
 				{
-					esc_dir = is_cell_wax_city(info, S);
+					esc_dir = is_cell_wax_city(info, N);
+					if (esc_dir == N)
+						esc_dir = is_cell_wax_city(info, S);
 					if (esc_dir == S)
 					{
 						return (command_t) {
@@ -213,7 +173,7 @@ command_t think(agent_info_t info)
 					}
 					else
 					{
-						esc_dir = is_cell_wax(info, S);
+						esc_dir = is_cell_free(info, S);
 						if (esc_dir >= 0)
 						{
 							return (command_t) {
@@ -221,23 +181,27 @@ command_t think(agent_info_t info)
 								.direction = esc_dir
 							};
 						}
-						/* Breaking the WALL */
-						if (esc_dir < 0)
+					}
+				}
+				if (info.row == (NUM_ROWS / 2))
+				{
+					esc_dir = is_cell_wax_city(info, S);
+					if (esc_dir == S)
+						esc_dir = is_cell_wax_city(info, N);
+					if (esc_dir == N)
+					{
+						return (command_t) {
+							.action = GUARD,
+							.direction = N
+						};
+					}
+					else
+					{
+						esc_dir = is_cell_free(info, N);
+						if (esc_dir >= 0)
 						{
-							if (esc_dir == -11)
-							{
-								/* Move random direction */
-								return (command_t) {
-									.action = MOVE,
-									.direction = rand() % 8
-								};
-							}
-							if (esc_dir == -10)
-								esc_dir = 0;
-							else
-								esc_dir = esc_dir * -1;
 							return (command_t) {
-								.action = GUARD,
+								.action = MOVE,
 								.direction = esc_dir
 							};
 						}
@@ -434,7 +398,7 @@ int main(int argc, char **argv)
 
 	char *host = argv[1];
 	int port = atoi(argv[2]);
-	char *team_name = "Pekka";
+	char *team_name = "tribe13";
 
 	agent_main(host, port, team_name, think);
 }
