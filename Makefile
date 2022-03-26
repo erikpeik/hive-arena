@@ -1,5 +1,5 @@
 NAME=agent
-PLAYER=epk_fin_2
+PLAYER=epk_final
 
 all: $(NAME)
 
